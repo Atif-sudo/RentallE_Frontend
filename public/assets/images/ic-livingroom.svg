@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+    <defs>
+        <linearGradient id="vffhw3ut5a" x1="-60.384%" x2="61.429%" y1="130.931%" y2="33.968%">
+            <stop offset="0%" stop-color="#A3DBFF"/>
+            <stop offset="100%" stop-color="#346AA0"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g>
+                    <g>
+                        <path fill="#FFF" d="M0 0H48V48H0z" transform="translate(-256 -544) translate(125 533) translate(110 7) translate(21 4)"/>
+                        <g>
+                            <path stroke="#346AA0" stroke-width="1.2" d="M2.438 10.776L41.262 10.776 41.262 0.4 2.438 0.4z" transform="translate(-256 -544) translate(125 533) translate(110 7) translate(21 4) translate(2 19)"/>
+                            <g>
+                                <g fill="url(#vffhw3ut5a)" fill-rule="nonzero" transform="translate(-256 -544) translate(125 533) translate(110 7) translate(21 4) translate(2 19) translate(.45 10) translate(0 1)">
+                                    <path d="M0.753 0.094L42.047 0.094 42.047 3.765 0.753 3.765z"/>
+                                </g>
+                                <path stroke="#346AA0" stroke-width="1.2" d="M0.153 0.494L42.647 0.494 42.647 5.365 0.153 5.365z" transform="translate(-256 -544) translate(125 533) translate(110 7) translate(21 4) translate(2 19) translate(.45 10)"/>
+                            </g>
+                            <path stroke="#346AA0" stroke-linecap="square" stroke-width="1.2" d="M.744 14.612v3.059m42.212-3.059v3.059" transform="translate(-256 -544) translate(125 533) translate(110 7) translate(21 4) translate(2 19)"/>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

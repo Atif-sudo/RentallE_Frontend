@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic-twowheeler</title>
+    <defs>
+        <linearGradient x1="50%" y1="40.799041%" x2="50%" y2="162.577862%" id="linearGradient-1">
+            <stop stop-color="#346AA0" offset="0%"></stop>
+            <stop stop-color="#7FADDB" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="72.2537465%" y1="50%" x2="-22.2067899%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#346AA0" offset="0%"></stop>
+            <stop stop-color="#7FADDB" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-icons---optimus" transform="translate(-1246.000000, -544.000000)">
+            <g id="Group" transform="translate(125.000000, 533.000000)">
+                <g id="Two-Wheelers" transform="translate(1100.000000, 7.000000)">
+                    <g id="Group-7" transform="translate(21.000000, 4.000000)">
+                        <rect id="Rectangle-Copy-8" fill="#FFFFFF" x="0" y="0" width="48" height="48"></rect>
+                        <g id="scooter-2" transform="translate(12.000000, 9.000000)" fill-rule="nonzero">
+                            <path d="M7.95,10 L15,10 C16.9,10 18.45,11.55 18.45,13.45 L18.45,23.95 C18.45,24.8 17.75,25.5 16.9,25.5 L6.05,25.5 C5.2,25.5 4.5,24.8 4.5,23.95 L4.5,13.45 C4.5,11.55 6.05,10 7.95,10 L7.95,10 Z" id="Path" fill="#FFFFFF"></path>
+                            <path d="M11.5,20.5 C12.9,20.5 14,21.6 14,23 L14,27 C14,28.4 12.9,29.5 11.5,29.5 C10.1,29.5 9,28.4 9,27 L9,23 C9,21.6 10.1,20.5 11.5,20.5 Z" id="Path" fill="url(#linearGradient-1)"></path>
+                            <path d="M11.5,17 C13.7,17 15.5,18.8 15.5,21 L15.5,23 L7.5,23 L7.5,21 C7.5,18.8 9.3,17 11.5,17 Z" id="Path" fill="#FFFFFF"></path>
+                            <g id="Group" transform="translate(10.500000, 12.500000)" fill="#D1E3EE">
+                                <polygon id="Path" points="0 2 2 2 2 3 0 3"></polygon>
+                                <polygon id="Path" points="0 0 2 0 2 1 0 1"></polygon>
+                            </g>
+                            <g id="Group" transform="translate(0.500000, 0.500000)" fill="#FFFFFF">
+                                <polygon id="Path" points="19 0 22 0 22 2 19 2"></polygon>
+                                <polygon id="Path" points="0 0 3 0 3 2 0 2"></polygon>
+                            </g>
+                            <polygon id="Path" fill="#FFFFFF" points="18 7 13 8 10 8 5 7 5 5 18 5"></polygon>
+                            <circle id="Oval" fill="#FFFFFF" cx="11.5" cy="7" r="3"></circle>
+                            <circle id="Oval" fill="url(#linearGradient-2)" cx="11.5" cy="7" r="2"></circle>
+                            <polygon id="Path" fill="#FFFFFF" points="7.5 22 15.5 22 15.5 23 7.5 23"></polygon>
+                            <polygon id="Path" fill="#346AA0" points="10.5 14.5 12.5 14.5 12.5 15.5 10.5 15.5"></polygon>
+                            <polygon id="Path" fill="#346AA0" points="10.5 12.5 12.5 12.5 12.5 13.5 10.5 13.5"></polygon>
+                            <path d="M16.5,4.5 L13.95,4.5 C12.6,3.15 10.4,3.15 9.05,4.5 L6.5,4.5 L5.5,4.5 L5,4.5 C4.7,4.5 4.5,4.7 4.5,5 L4.5,5.5 L2,5.5 C1.72385763,5.5 1.5,5.72385763 1.5,6 C1.5,6.27614237 1.72385763,6.5 2,6.5 L4.5,6.5 L4.5,6.5 L4.5,7 C4.5,7.25 4.65,7.45 4.9,7.5 L8.2,8.15 C8.4,8.65 8.65,9.1 9.05,9.5 L7.95,9.5 C5.75,9.5 4,11.3 4,13.45 L4,23.95 C4,25.05 4.9,26 6.05,26 L8.5,26 L8.5,27 C8.5,28.65 9.85,30 11.5,30 C13.15,30 14.5,28.65 14.5,27 L14.5,26 L16.95,26 C18.05,26 19,25.1 19,23.95 L19,13.45 C19,11.25 17.2,9.5 15.05,9.5 L13.95,9.5 C14.35,9.1 14.65,8.65 14.8,8.15 L18.1,7.5 C18.35,7.45 18.5,7.25 18.5,7 L18.5,6.5 L21,6.5 C21.2761424,6.5 21.5,6.27614237 21.5,6 C21.5,5.72385763 21.2761424,5.5 21,5.5 L18.5,5.5 L18.5,5.5 L18.5,5 C18.5,4.7 18.3,4.5 18,4.5 L17.5,4.5 L16.5,4.5 Z M5.5,6.6 L5.5,5.5 L8.35,5.5 C8.15,5.95 8,6.5 8,7 L8,7.1 L5.5,6.6 Z M8,22.5 L8,21 C8,19.05 9.55,17.5 11.5,17.5 C13.45,17.5 15,19.05 15,21 L15,22.5 L8,22.5 Z M11.5,29 C10.4,29 9.5,28.1 9.5,27 L9.5,23.5 L13.5,23.5 L13.5,27 C13.5,28.1 12.6,29 11.5,29 Z M15.05,10.5 C16.7,10.5 18,11.85 18,13.45 L18,23.95 C18,24.5 17.55,25 16.95,25 L14.5,25 L14.5,23.5 L15.5,23.5 C15.8,23.5 16,23.3 16,23 L16,21 C16,18.5 14,16.5 11.5,16.5 C9,16.5 7,18.5 7,21 L7,23 C7,23.3 7.2,23.5 7.5,23.5 L8.5,23.5 L8.5,25 L6.05,25 C5.5,25 5,24.55 5,23.95 L5,13.45 C5,11.8 6.35,10.5 7.95,10.5 L15.05,10.5 Z M11.5,9.5 C10.1,9.5 9,8.4 9,7 C9,5.6 10.1,4.5 11.5,4.5 C12.9,4.5 14,5.6 14,7 C14,8.4 12.9,9.5 11.5,9.5 L11.5,9.5 Z M17.5,6.6 L15,7.1 C15,7.05 15,7.05 15,7 C15,6.5 14.9,5.95 14.65,5.5 L17.5,5.5 L17.5,6.6 Z" id="Shape" fill="#346AA0"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
