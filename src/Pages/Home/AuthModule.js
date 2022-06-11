@@ -1,29 +1,17 @@
-import React, {useState,useEffect} from "react";
-import './App.css';
-import Menu from "./Menu";
-import {BrowserRouter,Routes,Route,} from "react-router-dom";
-import {Dialog} from "@mui/material";
-import axios from 'axios';
+import React,{useState} from 'react'
 import Cookies from 'universal-cookie';
+import SellerProfile from '../SellerProfile';
+import CustomerProfile from '../Single/CustomerProfile';
 import { ToastContainer, toast } from 'react-toastify';
-import CustomerProfile from "./Pages/Single/CustomerProfile";
-import SellerProfile from "./Pages/SellerProfile";
+import axios from 'axios';
 
+const AuthModule = ({isLoggedIn,setIsLoggedIn}) => {
 
-import {
-    Link
-  } from "react-router-dom";
-import Header from "./Pages/Home/Header";
-import AuthModule from "./Pages/Home/AuthModule";
-
-function Home({isLoggedIn,setIsLoggedIn}){
     const [sign_in_up_model,setsignin_up_model]= useState('')
-    const [catList,setCatList] = useState([]);
     const cookies = new Cookies();
 
-    const [cat,setCat] = useState(0);
+   
 
-  
     const handleLogin = (e) => {
 
         e.preventDefault();
@@ -40,7 +28,6 @@ function Home({isLoggedIn,setIsLoggedIn}){
             axios.post(`http://127.0.0.1:8080/Rentalle/v1/authentication/login`,userdata)
               .then(res => {
                 console.log(res.data)
-                const cookies = new Cookies();
                 cookies.set('usr1236emmffjsv', res.data.data, { path: '/'},);
                 console.log(cookies.get('myCat'));
                 document.querySelector('#myModal88 .close').click();
@@ -133,34 +120,7 @@ function Home({isLoggedIn,setIsLoggedIn}){
             
     }
 
-    function loginButtonClickHandle(){
-        if(isLoggedIn){
-            document.getElementById('profileModal').style.display='block';
-        }else{
-            setsignin_up_model('sign-in');
-        }
-    }
 
-    const callCategoryApi = () => {
-        axios.get(`http://127.0.0.1:8080/Rentalle/v1/category/lists`).then((res)=>{
-            
-            setCatList(res.data.data);
-            
-
-        }).catch((err)=>{
-            toast.error(err.response.data.error, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                dark:true,
-                progress: undefined,
-                theme:"light",
-                });
-        })
-    }
     const delayLogout = () => {
         window.location.reload();
     }
@@ -180,98 +140,10 @@ function Home({isLoggedIn,setIsLoggedIn}){
         const myTimeout = setTimeout(delayLogout, 3100);
     }
 
-    
 
-    useEffect(() => {
-      callCategoryApi();
-    }, [])
-    
-
-    return(
-        <div className="App">
-            <div className="header" id="home1">
-                <div className="container">
-                    <div className="w3l_login">
-                      <a href="#" onClick={loginButtonClickHandle} data-toggle="modal" data-target="myModal88"><span className="glyphicon glyphicon-user" aria-hidden="true"></span></a>
-                    </div>
-
-                    <div className="w3l_logo">
-                        <h1><Link to="/">RentallE <span>Your Stores. Your Place.</span></Link></h1>
-                    </div>
-
-                    <div className="search">
-                        <input className="search_box" type="checkbox" id="search_box"/>
-                        <label className="indexContainer" for="search_box"><span className="glyphicon glyphicon-search" aria-hidden="true"></span> </label>
-                        <div className="search_form">
-                            <form action="#" method="post">
-                                <input type="text" name="search" placeholder="Search..."/>
-                                <input type="submit" value="Send"/>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div className="cart cart box_1">
-                        <form action="#" method="post" className="last">
-                            <input type="hidden" name="cmd" value="last"/>
-                            <input type="hidden" name="display" value="1"/>
-                            <button className="w3view-cart" type="submit" name="submit" value=""><i className="fa fa-cart-arrow-down" aria-hidden="true"></i></button>
-                        </form>
-                    </div>
-
-
-                </div>
-
-            </div>
-
-            <Menu></Menu>
-
-        <div className="banner">
-            <div className="container">
-                <h3>RentallE Store, <span>Special Offers</span></h3>
-            </div>
-        </div>
-
-        <div className="banner-bottom">
-            <div className="container">
-                <div className="col-md-12 wthree_banner_bottom_right">
-
-                <section>
-        <div className="container">
-            <div className="text-muted mt-5 mb-5 text-center display-4"><h2>CATEGORIES</h2></div>
-            <hr/>
-            <div className="row">
-                {
-                    
-                    catList?.map((array,index) =>{
-
-                        return (
-                            <div className="col-xs-6 col-sm-6 col-md-3 col-lg-3 p-2">
-                            <div className="card p-3 shadow text-center border-0">
-                                <div className="card-body">
-                                    <img src={`assets/images/${array.category_logo}`}/>                            <hr/>
-                                    <h5 className="card-title display-1">
-                                        <Link to={`${array.category_action}/${array.ID}`}>{array.CategoryName}</Link>
-                                        </h5>
-                                </div>
-                            </div>
-                        </div>
-                          )
-                    })
-                }
-            </div>
-           
-        </div>
-    </section>
-
-
-                </div>
-            </div>
-        </div>
-
-
-           
-
-            { !isLoggedIn ?
+  return (
+    <>
+          { !isLoggedIn ?
             <div className={"modal  " +sign_in_up_model} id="myModal88" tabIndex="-1">
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
@@ -370,137 +242,44 @@ function Home({isLoggedIn,setIsLoggedIn}){
             <div className="modal" id="profileModal" tabIndex="-1">
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
+                    
                         <div className="modal-header">
-                        <button type="button" class="btn btn-danger" onClick={(e)=>{logOut(e)}}>Log out</button>
+                        <button type="button" class="btn btn-danger mt-2" onClick={(e)=>(logOut(e))}>Logout</button>
                             <button type="button" onClick={()=>document.getElementById('profileModal').style.display='none'} className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 className="modal-title">
                                 Profile Details
+                                {console.log(cookies.get('usr1236emmffjsv').ID)}
                             </h4>
                         </div>
                         <div className="modal-body modal-body-sub">
                             <div className="row">
                                
                                 <div className="col-md-4" >
-                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">FullName</div>
+                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">
+                                    {cookies.get('usr1236emmffjsv').FullName}</div>
                                 </div>
                                 
                                 <div className="col-md-4" >
-                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">Email</div>
+                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">{cookies.get('usr1236emmffjsv').Email}</div>
                                 </div>
                                 
                                 <div className="col-md-4">
-                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">MobileNo</div>
+                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">{cookies.get('usr1236emmffjsv').MobileNo}</div>
                                 </div>               
                             
                             </div>
 
-                            <div class=" mt-2">
                             {
                                 cookies.get('usr1236emmffjsv').is_customer ? <CustomerProfile Id = {cookies.get('usr1236emmffjsv').ID} /> : <SellerProfile Id = {cookies.get('usr1236emmffjsv').ID} />
                             }
-                            <form class="row g-3 gy-2 gx-3 align-items-center">
-                            
-                                                               
-                                <div className="">
-
-
-                                    <div class="col-md-6">
-
-                                    <label for="exampleFormControlSelect1">Category</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
-                                    <option selected>Select</option>
-                                    <option>Bed Room</option>
-                                    <option>Living Room</option>
-                                    <option>Vehicles</option>
-                                    <option>Electronics</option>
-                                    <option>Appliances</option>
-                                    <option>Kitchen</option>
-                                    </select>
-
-
-                                    <label for="inputProduct" class="form-label">Product Name</label>
-                                        <input type="product" class="form-control" id="inputProduct" placeholder="Enter Product Name"/>
-
-
-                                    <div class="input-group ">
-                                      <label class="input-group-text" for="inputGroupFile01">Product Image</label>
-                                     <input type="file" class="form-control" id="inputGroupFile01"/>
-                                    </div>
-
-                                    </div>
-
-                                
-                                   
-                                    
-                                    <div className="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlTextarea1" class="form-label">Product Description</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter Product Description..."></textarea>
-
-                                    </div>
-                                    <label for="inputProduct" class="form-label">Product per Month</label>
-                                        <input type="product" class="form-control" id="inputProduct" placeholder=" Product price in rupees"/>               
-
-
-                                    <label for="exampleFormControlSelect1">Total Product</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
-                                    <option selected>Select</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                    <option>6</option>
-                                    <option>7</option>
-                                    <option>8</option>
-                                    <option>9</option>
-                                    <option>10</option>
-                                    
-                                    </select>
-
-                                       
-                                
-                                    </div>
-
-                                   
-
-                                    <div className="mb-3 col-md-12">
-
-                                    
-                                        </div>
-
-                                            <div className="col-md-12">
-
-                                            <button  type="submit" class="btn btn-primary">Submit</button>
-
-                                            </div>
-                                                             
-                                       
-
-                                    </div>
-
-
-                               
-
-                                   
-                                
-                            
-                                         
-                                </form>
-                            </div>   
-
 
                         </div>
                     </div>
                 </div>
             </div>
             }
-
-
-        </div>
-
-    );
+    </>
+  )
 }
 
-
-export default Home;
+export default AuthModule

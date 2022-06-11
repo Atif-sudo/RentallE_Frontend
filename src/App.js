@@ -55,41 +55,41 @@ function App() {
 
 
             <Route exact path = "/bedroom/:id">
-            <Bedroom />
+            <Bedroom  isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             </Route>
 
             <Route exact path= "/purifiers/:id">
-              <Purifiers/>
+              <Purifiers isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
 
             </Route>
 
             <Route exact path= "/livingroom/:id">
-              <LivingRoom/>
+              <LivingRoom isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
 
             </Route>
 
             <Route exact path="/vehicles/:id">
-              <Vehicles/>
+              <Vehicles isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
 
             </Route>
 
             <Route exact path= "/airconditioner/:id">
-              <Airconditioner/>
+              <Airconditioner isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
 
             </Route>
 
             <Route exact path= "/kitchenappliances/:id">
-              <KitchenAppliances/>
+              <KitchenAppliances isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
 
             </Route>
 
             <Route exact path= "/washingmachine/:id">
-              <WashingMachine/>
+              <WashingMachine isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
 
             </Route>
 
             <Route exact path="/singleproduct">
-              <SingleProduct/>
+              <SingleProduct isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
 
 
             </Route>
