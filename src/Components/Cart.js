@@ -1,29 +1,23 @@
-import React, {useState,useEffect} from "react";
-import './App.css';
-import Menu from "./Menu";
-import {BrowserRouter,Routes,Route,} from "react-router-dom";
-import {Dialog} from "@mui/material";
-import axios from 'axios';
-import Cookies from 'universal-cookie';
+
+import React,{useState} from 'react'
 import { ToastContainer, toast } from 'react-toastify';
-import CustomerProfile from "./Pages/Single/CustomerProfile";
-import SellerProfile from "./Pages/SellerProfile";
+import axios from 'axios';
+import CustomerProfile from '../Pages/Single/CustomerProfile';
+import SellerProfile from '../Pages/SellerProfile';
+import Cookies from 'universal-cookie';
+import { Link } from 'react-router-dom';
+import Menu from '../Menu';
 
-
-import {
-    Link
-  } from "react-router-dom";
-import Header from "./Pages/Home/Header";
-import AuthModule from "./Pages/Home/AuthModule";
-
-function Home({isLoggedIn,setIsLoggedIn}){
+const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
+    console.log(cart)
     const [sign_in_up_model,setsignin_up_model]= useState('')
-    const [catList,setCatList] = useState([]);
     const cookies = new Cookies();
 
-    const [cat,setCat] = useState(0);
+    let totalProduct=0;
+    cart?.map((array,index) => {
+        totalProduct += array.amount;
+    })
 
-  
     const handleLogin = (e) => {
 
         e.preventDefault();
@@ -40,7 +34,6 @@ function Home({isLoggedIn,setIsLoggedIn}){
             axios.post(`http://127.0.0.1:8080/Rentalle/v1/authentication/login`,userdata)
               .then(res => {
                 console.log(res.data)
-                const cookies = new Cookies();
                 cookies.set('usr1236emmffjsv', res.data.data, { path: '/'},);
                 console.log(cookies.get('myCat'));
                 document.querySelector('#myModal88 .close').click();
@@ -134,6 +127,7 @@ function Home({isLoggedIn,setIsLoggedIn}){
     }
 
     function loginButtonClickHandle(){
+        
         if(isLoggedIn){
             document.getElementById('profileModal').style.display='block';
         }else{
@@ -141,26 +135,6 @@ function Home({isLoggedIn,setIsLoggedIn}){
         }
     }
 
-    const callCategoryApi = () => {
-        axios.get(`http://127.0.0.1:8080/Rentalle/v1/category/lists`).then((res)=>{
-            
-            setCatList(res.data.data);
-            
-
-        }).catch((err)=>{
-            toast.error(err.response.data.error, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                dark:true,
-                progress: undefined,
-                theme:"light",
-                });
-        })
-    }
     const delayLogout = () => {
         window.location.reload();
     }
@@ -180,17 +154,19 @@ function Home({isLoggedIn,setIsLoggedIn}){
         const myTimeout = setTimeout(delayLogout, 3100);
     }
 
-    
+   const  removeFromCart = (e,index) => {
+    let newCart = cart?.filter((array) => {
+        return array.id !== index;
+    })
+    console.log(newCart);
+    setCart(newCart);
+    localStorage.setItem("cart",JSON.stringify(newCart));
+   }
 
-    useEffect(() => {
-      callCategoryApi();
-    }, [])
-    
-
-    return(
-        <div className="App">
-            <div className="header" id="home1">
-                <div className="container">
+  return (
+    <div>
+         {/* <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} /> */}
+         <div className="container">
                     <div className="w3l_login">
                       <a href="#" onClick={loginButtonClickHandle} data-toggle="modal" data-target="myModal88"><span className="glyphicon glyphicon-user" aria-hidden="true"></span></a>
                     </div>
@@ -210,68 +186,76 @@ function Home({isLoggedIn,setIsLoggedIn}){
                         </div>
                     </div>
 
-                    <div className="cart cart box_1">
-                    <div action="/cart" method="post" className="last">
-                            <input type="hidden" name="cmd" value="last"/>
-                            <input type="hidden" name="display" value="1"/>
-                            <button className="w3view-cart" type="submit" name="submit" value=""><Link to = '/cart'> <i className="fa fa-cart-arrow-down" aria-hidden="true"></i></Link></button>
-                        </div>
-                    </div>
+                
 
 
                 </div>
+      
+      <Menu/>
+     
+     {/* Add cart page here to to show the data */}
 
-            </div>
 
-            <Menu></Menu>
 
-        <div className="banner">
-            <div className="container">
-                <h3>RentallE Store, <span>Special Offers</span></h3>
-            </div>
-        </div>
-
-        <div className="banner-bottom">
-            <div className="container">
-                <div className="col-md-12 wthree_banner_bottom_right">
-
-                <section>
-        <div className="container">
-            <div className="text-muted mt-5 mb-5 text-center display-4"><h2>CATEGORIES</h2></div>
-            <hr/>
-            <div className="row">
-                {
-                    
-                    catList?.map((array,index) =>{
-
-                        return (
-                            <div className="col-xs-6 col-sm-6 col-md-3 col-lg-3 p-2">
-                            <div className="card p-3 shadow text-center border-0">
-                                <div className="card-body">
-                                    <img src={`assets/images/${array.category_logo}`}/>                            <hr/>
-                                    <h5 className="card-title display-1">
-                                        <Link to={`${array.category_action}/${array.ID}`}>{array.CategoryName}</Link>
-                                        </h5>
+     <div class="card">
+            <div class="row">
+                <div class="col-md-8 cart">
+                    <div class="title">
+                        <div class="row">
+                            <div class="col"><h4><b>Cart</b></h4></div>
+                            <div class="col align-self-center text-right text-muted">{cart.length} Items</div>
+                        </div>
+                    </div>   
+                    {
+                        cart?.map((array,index) => {
+                            
+                            return (
+                                <div class="row border-top border-bottom">
+                                <div class="row main align-items-center">
+                                 
+                                    <div class="col">
+                                        <div class="row text-muted">{cart[index].name}</div>
+                                        <div class="row">{`No of items ${cart[index].noOfProduct}`}</div>
+                                    </div>
+                                   
+                                    <div class="col"> &#8377; {cart[index].amount}<span class="close" onClick = {(e) => {removeFromCart(e,cart[index].id)}}>&#10005;</span></div>
                                 </div>
                             </div>
-                        </div>
-                          )
-                    })
-                }
-            </div>
-           
-        </div>
-    </section>
-
-
+                            )
+                        })
+                    } 
+                   
+                    <div class="back-to-shop"><Link to="/"><span class="text-muted">Back to shop</span></Link></div>
                 </div>
+
+                <div class="col-md-4 summary">
+                    <div><h5><b>Summary</b></h5></div>
+                    <hr />
+                    <div class="row">
+                        <div class="col" >ITEMS 3</div>
+                        <div class="col text-right">&#8377;  {totalProduct}</div>
+                    </div>
+                    <form>
+                        <p>SHIPPING</p>
+                        <select><option class="text-muted">Standard-Delivery- &#8377; 5.00</option></select>
+                        <p>GIVE CODE</p>
+                        <input id="code" placeholder="Enter your code" />
+                    </form>
+                    <div class="row" >
+                        <div class="col">TOTAL PRICE</div>
+                        <div class="col text-right">&#8377; {totalProduct + 5}</div>
+                    </div>
+                    <button class="btn">CHECKOUT</button>
+                </div>
+
             </div>
+            
         </div>
 
 
-           
+     {/* Ended cart code here */}
 
-            { !isLoggedIn ?
+         { !isLoggedIn ?
             <div className={"modal  " +sign_in_up_model} id="myModal88" tabIndex="-1">
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
@@ -370,137 +354,44 @@ function Home({isLoggedIn,setIsLoggedIn}){
             <div className="modal" id="profileModal" tabIndex="-1">
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
+                    
                         <div className="modal-header">
-                        <button type="button" class="btn btn-danger" onClick={(e)=>{logOut(e)}}>Log out</button>
+                        <button type="button" class="btn btn-danger mt-2" onClick={(e)=>(logOut(e))}>Logout</button>
                             <button type="button" onClick={()=>document.getElementById('profileModal').style.display='none'} className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 className="modal-title">
                                 Profile Details
+                                {console.log(cookies.get('usr1236emmffjsv').ID)}
                             </h4>
                         </div>
                         <div className="modal-body modal-body-sub">
                             <div className="row">
                                
                                 <div className="col-md-4" >
-                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">FullName</div>
+                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">
+                                    {cookies.get('usr1236emmffjsv').FullName}</div>
                                 </div>
                                 
                                 <div className="col-md-4" >
-                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">Email</div>
+                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">{cookies.get('usr1236emmffjsv').Email}</div>
                                 </div>
                                 
                                 <div className="col-md-4">
-                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">MobileNo</div>
+                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">{cookies.get('usr1236emmffjsv').MobileNo}</div>
                                 </div>               
                             
                             </div>
 
-                            <div class=" mt-2">
                             {
                                 cookies.get('usr1236emmffjsv').is_customer ? <CustomerProfile Id = {cookies.get('usr1236emmffjsv').ID} /> : <SellerProfile Id = {cookies.get('usr1236emmffjsv').ID} />
                             }
-                            <form class="row g-3 gy-2 gx-3 align-items-center">
-                            
-                                                               
-                                <div className="">
-
-
-                                    <div class="col-md-6">
-
-                                    <label for="exampleFormControlSelect1">Category</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
-                                    <option selected>Select</option>
-                                    <option>Bed Room</option>
-                                    <option>Living Room</option>
-                                    <option>Vehicles</option>
-                                    <option>Electronics</option>
-                                    <option>Appliances</option>
-                                    <option>Kitchen</option>
-                                    </select>
-
-
-                                    <label for="inputProduct" class="form-label">Product Name</label>
-                                        <input type="product" class="form-control" id="inputProduct" placeholder="Enter Product Name"/>
-
-
-                                    <div class="input-group ">
-                                      <label class="input-group-text" for="inputGroupFile01">Product Image</label>
-                                     <input type="file" class="form-control" id="inputGroupFile01"/>
-                                    </div>
-
-                                    </div>
-
-                                
-                                   
-                                    
-                                    <div className="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlTextarea1" class="form-label">Product Description</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter Product Description..."></textarea>
-
-                                    </div>
-                                    <label for="inputProduct" class="form-label">Product per Month</label>
-                                        <input type="product" class="form-control" id="inputProduct" placeholder=" Product price in rupees"/>               
-
-
-                                    <label for="exampleFormControlSelect1">Total Product</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
-                                    <option selected>Select</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                    <option>6</option>
-                                    <option>7</option>
-                                    <option>8</option>
-                                    <option>9</option>
-                                    <option>10</option>
-                                    
-                                    </select>
-
-                                       
-                                
-                                    </div>
-
-                                   
-
-                                    <div className="mb-3 col-md-12">
-
-                                    
-                                        </div>
-
-                                            <div className="col-md-12">
-
-                                            <button  type="submit" class="btn btn-primary">Submit</button>
-
-                                            </div>
-                                                             
-                                       
-
-                                    </div>
-
-
-                               
-
-                                   
-                                
-                            
-                                         
-                                </form>
-                            </div>   
-
 
                         </div>
                     </div>
                 </div>
             </div>
             }
-
-
-        </div>
-
-    );
+    </div>
+  )
 }
 
-
-export default Home;
+export default Cart

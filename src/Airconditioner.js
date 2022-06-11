@@ -7,7 +7,7 @@ import CustomerProfile from './Pages/Single/CustomerProfile';
 import SellerProfile from './Pages/SellerProfile';
 import { Link } from 'react-router-dom'
 
-const Airconditioner = ({isLoggedIn,setIsLoggedIn}) => {
+const Airconditioner = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
 
 
     const [sign_in_up_model,setsignin_up_model]= useState('')
@@ -177,11 +177,11 @@ const Airconditioner = ({isLoggedIn,setIsLoggedIn}) => {
                     </div>
 
                     <div className="cart cart box_1">
-                        <form action="#" method="post" className="last">
+                        <div action="/cart" method="post" className="last">
                             <input type="hidden" name="cmd" value="last"/>
                             <input type="hidden" name="display" value="1"/>
-                            <button className="w3view-cart" type="submit" name="submit" value=""><i className="fa fa-cart-arrow-down" aria-hidden="true"></i></button>
-                        </form>
+                            <button className="w3view-cart" type="submit" name="submit" value=""><Link to = '/cart'> <i className="fa fa-cart-arrow-down" aria-hidden="true"></i></Link></button>
+                        </div>
                     </div>
 
 

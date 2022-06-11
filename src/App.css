@@ -328,3 +328,31 @@
   justify-content: space-between;
 }
 
+
+/*  Css code for cart */
+
+/* body{
+  background: #ddd;
+  min-height: 100vh;
+  vertical-align: middle;
+  display: flex;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+} */
+
+@media(max-width:767px){
+  .card{
+      margin: 3vh auto;
+  }
+}
+
+@media(max-width:767px){
+  .cart{
+      padding: 4vh;
+      border-bottom-left-radius: unset;
+      border-top-right-radius: 1rem;
+  }
+}
+
+/* Css codes end here for cart */

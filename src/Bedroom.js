@@ -11,7 +11,7 @@ import SellerProfile from './Pages/SellerProfile';
 import CustomerProfile from './Pages/Single/CustomerProfile';
 
 
-const Bedroom = ({isLoggedIn,setIsLoggedIn}) => {
+const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
 
     const [sign_in_up_model,setsignin_up_model]= useState('');
     const cookies = new Cookies();
@@ -185,7 +185,12 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn}) => {
         }
     }
 
-    //  console.log(prpList);
+   
+    
+
+    // Add to cart
+
+    
 
     useEffect(() => {
       callGetAppProductApi();
@@ -216,11 +221,11 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn}) => {
                     </div>
 
                     <div className="cart cart box_1">
-                        <form action="#" method="post" className="last">
+                    <div action="/cart" method="post" className="last">
                             <input type="hidden" name="cmd" value="last"/>
                             <input type="hidden" name="display" value="1"/>
-                            <button className="w3view-cart" type="submit" name="submit" value=""><i className="fa fa-cart-arrow-down" aria-hidden="true"></i></button>
-                        </form>
+                            <button className="w3view-cart" type="submit" name="submit" value=""><Link to = '/cart'> <i className="fa fa-cart-arrow-down" aria-hidden="true"></i></Link></button>
+                        </div>
                     </div>
 
 
@@ -277,12 +282,12 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn}) => {
                                          <h5><a href="single.html">{array.productName}</a> </h5>
                                          <div className="simpleCart_shelfItem">
                                              <p><span>$380</span><i className="item price">{`₹${array.pricePerMonth}`}</i> </p>
-                                             <form action="#" method="post">
+                                             <form action="#" method="post" onSubmit={(e) => {addToCart(e)}} id="cart-item-ad">
                                                  <input type="hidden" name="cmd" value="_cart"/>
                                                  <input type="hidden" name="add" value="1"/>
                                                  <input type="hidden" name="w3ls_item" value="Mobile Phone1"/>
                                                  <input type="hidden" name="amount" value="350.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
+                                                 <button type="submit" className="w3ls-cart" >Add to cart</button>
                                              </form>
                                          </div>
                                      </div>
@@ -307,9 +312,9 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn}) => {
                                          <h5><a href="single.html">Mobile Phone2</a></h5>
                                          <div className="simpleCart_shelfItem">
                                              <p><span>$330</span> <i className="item_price">$302</i></p>
-                                             <form action="#" method="post">
+                                             <form action="#" method="post" onSubmit={(e) => {addToCart(e)}}>
                                                  <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
+                                                 <input type="hidden" name="add" value="2" />
                                                  <input type="hidden" name="w3ls_item" value="Mobile Phone2" />
                                                  <input type="hidden" name="amount" value="302.00" />
                                                  <button type="submit" className="w3ls-cart">Add to cart</button>
@@ -338,9 +343,9 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn}) => {
                                          <h5><a href="single.html">Mobile Phone3</a></h5>
                                          <div className="simpleCart_shelfItem">
                                              <p><span>$250</span> <i className="item_price">$245</i></p>
-                                             <form action="#" method="post">
+                                             <form action="#" method="post" onSubmit={(e) => {addToCart(e)}}>
                                                  <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
+                                                 <input type="hidden" name="add" value="3" />
                                                  <input type="hidden" name="w3ls_item" value="Mobile Phone3" />
                                                  <input type="hidden" name="amount" value="245.00"/>
                                                  <button type="submit" className="w3ls-cart">Add to cart</button>
