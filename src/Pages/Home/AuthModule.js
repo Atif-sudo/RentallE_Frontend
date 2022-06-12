@@ -244,8 +244,11 @@ const AuthModule = ({isLoggedIn,setIsLoggedIn}) => {
                     <div className="modal-content">
                     
                         <div className="modal-header">
+                        <button type="button" onClick={()=>document.getElementById('profileModal').style.display='none'} className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <div class="logout-container text-right">
                         <button type="button" class="btn btn-danger mt-2" onClick={(e)=>(logOut(e))}>Logout</button>
-                            <button type="button" onClick={()=>document.getElementById('profileModal').style.display='none'} className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        
                             <h4 className="modal-title">
                                 Profile Details
                                 {console.log(cookies.get('usr1236emmffjsv').ID)}

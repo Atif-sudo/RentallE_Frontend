@@ -36,7 +36,23 @@
 .modal.sign-up.sign-up{
   display: block;
 }
-
+.m-4{
+  margin: 1rem !important;
+}
+.p-4{
+  padding: 1rem !important;
+}
+.summary{
+  border-radius: 10px;
+  background :#eee;
+}
+.summary .btn{
+  color: #fff;
+  background: #3c43a4;
+}
+.row{
+  margin: 0;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

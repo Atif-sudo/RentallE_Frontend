@@ -1466,6 +1466,8 @@ h2.resp-accordion {
 /*-- //sap --*/
 .modal-body-sub {
     padding: 3em !important;
+	max-height: 80vh;
+	overflow-y: scroll;
 }
 .modal-title {
     font-size: 1.5em;

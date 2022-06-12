@@ -280,7 +280,7 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
 
 
      <div class="card">
-            <div class="row">
+            <div class="row m-4">
                 <div class="col-md-8 cart">
                     <div class="title">
                         <div class="row">
@@ -310,7 +310,7 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
                     <div class="back-to-shop"><Link to="/"><span class="text-muted">Back to shop</span></Link></div>
                 </div>
 
-                <div class="col-md-4 summary">
+                <div class="col-md-4 summary p-4">
                 <form onSubmit={(e) => checkOut(e)} method = "POST">
                     <div><h5><b>Summary</b></h5></div>
                     <hr />
@@ -441,8 +441,11 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
                     <div className="modal-content">
                     
                         <div className="modal-header">
-                        <button type="button" class="btn btn-danger mt-2" onClick={(e)=>(logOut(e))}>Logout</button>
                             <button type="button" onClick={()=>document.getElementById('profileModal').style.display='none'} className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <div class="logout-container text-right">
+                            <button type="button" class="btn btn-danger mt-2" onClick={(e)=>(logOut(e))}>Logout</button>
+                            </div>
+                        
                             <h4 className="modal-title">
                                 Profile Details
                                 {console.log(cookies.get('usr1236emmffjsv').ID)}
