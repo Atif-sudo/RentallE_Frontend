@@ -398,7 +398,7 @@ function Home({isLoggedIn,setIsLoggedIn}){
                             {
                                 cookies.get('usr1236emmffjsv').is_customer ? <CustomerProfile Id = {cookies.get('usr1236emmffjsv').ID} /> : <SellerProfile Id = {cookies.get('usr1236emmffjsv').ID} />
                             }
-                            <form class="row g-3 gy-2 gx-3 align-items-center">
+                            {/* <form class="row g-3 gy-2 gx-3 align-items-center">
                             
                                                                
                                 <div className="">
@@ -418,14 +418,7 @@ function Home({isLoggedIn,setIsLoggedIn}){
                                     </select>
 
 
-                                    <label for="inputProduct" class="form-label">Product Name</label>
-                                        <input type="product" class="form-control" id="inputProduct" placeholder="Enter Product Name"/>
-
-
-                                    <div class="input-group ">
-                                      <label class="input-group-text" for="inputGroupFile01">Product Image</label>
-                                     <input type="file" class="form-control" id="inputGroupFile01"/>
-                                    </div>
+                             
 
                                     </div>
 
@@ -486,7 +479,7 @@ function Home({isLoggedIn,setIsLoggedIn}){
                                 
                             
                                          
-                                </form>
+                                </form> */}
                             </div>   
 
 

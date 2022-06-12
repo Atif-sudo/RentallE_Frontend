@@ -5,12 +5,17 @@ import axios from 'axios';
 import CustomerProfile from './Pages/Single/CustomerProfile';
 import SellerProfile from './Pages/SellerProfile';
 import Cookies from 'universal-cookie';
-import { Link } from 'react-router-dom'
+import { Link,useParams } from 'react-router-dom'
 
 const LivingRoom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
 
 
-    const [sign_in_up_model,setsignin_up_model]= useState('')
+    const [sign_in_up_model,setsignin_up_model]= useState('');
+    const [prpList, setPrpList] = useState([]);
+    const [subCategories, setSubCategories] = useState([]);
+
+    const {id} = useParams();
+  
     const cookies = new Cookies();
 
     const handleLogin = (e) => {
@@ -149,6 +154,45 @@ const LivingRoom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
         const myTimeout = setTimeout(delayLogout, 3100);
     }
 
+
+    const callGetAppProductApi = () => {
+        let data = {
+            id:id,
+            limit:10
+        }
+        axios.post(`http://127.0.0.1:8080/Rentalle/v1/product/getProduct`,data).then((res)=>{
+
+           console.log(res.data.data)
+           let data = res.data.data;
+           setPrpList(data);
+           let subCategoryList=[];
+           data.map((elm,index)=>{
+                subCategoryList.push(elm.subCategoryName);
+           });
+           console.log('subcategory', [...new Set(subCategoryList)]);
+           setSubCategories([...new Set(subCategoryList)]);
+            
+
+        }).catch((err)=>{
+            toast.error(err.response.data.error, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                dark:true,
+                progress: undefined,
+                theme:"light",
+                });
+        })
+    }
+
+
+    useEffect(() => {
+        callGetAppProductApi();
+      }, [])
+
   return (
 
     <div>
@@ -190,10 +234,10 @@ const LivingRoom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
                     <div className="col-md-12 wthree_banner_bottom_right">
                         <div className="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
                             <ul id="myTab" className="nav nav-tabs" role="tablist">
-                                <li role="presentation" className="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab">SOFA</a></li>
+                                {/* <li role="presentation" className="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab">SOFA</a></li>
                                 <li role="presentation"><a href="#audio" role="tab" id="audio-tab" data-toggle="tab" aria-controls="audio">SOFA SETS</a> </li>
                                 <li role="presentation"><a href="#video" role="tab" id="video-tab" data-toggle="tab" aria-controls="video">RECLINER</a> </li>
-                                <li role="presentation"><a href="#tv" role="tab" id="tv-tab" data-toggle="tab" aria-controls="tv">MULTI FUNCTIONAL </a> </li>
+                                <li role="presentation"><a href="#tv" role="tab" id="tv-tab" data-toggle="tab" aria-controls="tv">MULTI FUNCTIONAL </a> </li> */}
                                 
                             </ul>
                          <div id="myTabContent" className="tab-content">

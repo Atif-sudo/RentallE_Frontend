@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
-
+import { ToastContainer, toast } from 'react-toastify';
 const SellerProfile = ({Id}) => {
 
     const [selledProducts, setSelledProducts] = useState([]);
@@ -20,6 +20,47 @@ const SellerProfile = ({Id}) => {
         })
     }
 
+    const uploadProduct = (e) => {
+        e.preventDefault();
+        console.log(e.target.category.value);
+        let data = {
+                CategoryID : e.target.category.value,
+                ProductName: e.target.proName.value,
+                ProductDescription: e.target.desc.value,
+                TotalProduct: e.target.totalProduct.value,
+                PhotoUpload: e.target.proLink.value,
+                PricePerMonth: e.target.pricePerMonth.value,
+                SellerID: Id
+        }
+        console.log(data);
+        axios.post(`http://127.0.0.1:8080/Rentalle/v1/product/upload`,data).then((res)=>{
+            
+            toast.success(res.data.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
+            
+
+        }).catch((err)=>{
+            toast.error(err.response, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                dark:true,
+                progress: undefined,
+                theme:"light",
+                });
+        })
+    }
+
     useEffect(() => {
         callGetSelledProductsApi();
       }, [])
@@ -27,7 +68,7 @@ const SellerProfile = ({Id}) => {
   return (
       <>
     <div class=" mt-2">
-    <form class="row g-3 gy-2 gx-3 align-items-center">
+    <form class="row g-3 gy-2 gx-3 align-items-center" method = "post" onSubmit={(e) => {uploadProduct(e)}}>
     
 
 
@@ -75,24 +116,26 @@ const SellerProfile = ({Id}) => {
             <div class="col-md-6" style ={{marginTop:"30px"}}>
 
             <label for="exampleFormControlSelect1">Category</label>
-            <select class="form-control" id="exampleFormControlSelect1">
+            <select class="form-control" id="exampleFormControlSelect1" name = "category">
             <option selected>Select</option>
-            <option>Bed Room</option>
-            <option>Living Room</option>
-            <option>Vehicles</option>
-            <option>Electronics</option>
-            <option>Appliances</option>
-            <option>Kitchen</option>
-            </select>
+            <option value= '1'>Bed Room</option>
+            <option value= '2'>Living Room</option>
+            <option value= '3'>Vehicles</option>
+            <option value= '4'>Purifiers</option>
+            <option value= '5'>air conditioner</option>
+            <option value= '6'>Kitchen Appliances</option>
+         
+            <option value= '7'>washing machine</option>
+            </select >
 
 
             <label for="inputProduct" class="form-label">Product Name</label>
-                <input type="product" class="form-control" id="inputProduct" placeholder="Enter Product Name"/>
+                <input type="product" class="form-control" id="inputProduct" name = "proName" placeholder="Enter Product Name"/>
 
 
             <div class="input-group ">
-              <label class="input-group-text" for="inputGroupFile01">Product Image</label>
-             <input type="file" class="form-control" id="inputGroupFile01"/>
+              <label class="input-group-text" for="inputGroupFile01" >Product Image Link</label>
+             <input type="text" class="form-control" id="inputGroupFile01" name = "proLink"/>
             </div>
 
             </div>
@@ -103,26 +146,26 @@ const SellerProfile = ({Id}) => {
             <div className="col-md-6" style ={{marginTop:"30px"}}>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Product Description</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter Product Description..."></textarea>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter Product Description..." name = "desc"></textarea>
 
             </div>
             <label for="inputProduct" class="form-label">Product per Month</label>
-                <input type="product" class="form-control" id="inputProduct" placeholder=" Product price in rupees"/>               
+                <input type="product" class="form-control" id="inputProduct" name = "pricePerMonth" placeholder=" Product price in rupees"/>               
 
 
             <label for="exampleFormControlSelect1">Total Product</label>
-            <select class="form-control" id="exampleFormControlSelect1">
+            <select class="form-control" id="exampleFormControlSelect1" name = "totalProduct">
             <option selected>Select</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
+            <option value = '1'>1</option>
+            <option value = '2'>2</option>
+            <option value = '3'>3</option>
+            <option value = '4'>4</option>
+            <option value = '5'>5</option>
+            <option value = '6'>6</option>
+            <option value = '7'>7</option>
+            <option value = '8'>8</option>
+            <option value = '9'>9</option>
+            <option value = '10'>10</option>
             
             </select>
   

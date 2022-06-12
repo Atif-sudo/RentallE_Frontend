@@ -18,6 +18,7 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
 
     const [cat,setCat] = useState(0);
       const [prpList, setPrpList] = useState([]);
+      const [subCategories, setSubCategories] = useState([]);
 
      const {id} = useParams();
    
@@ -153,12 +154,19 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
     const callGetAppProductApi = () => {
         let data = {
             id:id,
-            limit:2
+            limit:10
         }
         axios.post(`http://127.0.0.1:8080/Rentalle/v1/product/getProduct`,data).then((res)=>{
 
            console.log(res.data.data)
-           setPrpList(res.data.data);
+           let data = res.data.data;
+           setPrpList(data);
+           let subCategoryList=[];
+           data.map((elm,index)=>{
+                subCategoryList.push(elm.subCategoryName);
+           });
+           console.log('subcategory', [...new Set(subCategoryList)]);
+           setSubCategories([...new Set(subCategoryList)]);
             
 
         }).catch((err)=>{
@@ -239,14 +247,15 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
                     <div className="col-md-12 wthree_banner_bottom_right">
                         <div className="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
                             <ul id="myTab" className="nav nav-tabs" role="tablist">
+                                {/*
                                 {
-                                    prpList?.map((array,index) =>{
+                                subCategories?.map((elm,index) =>{
                                         return (
-                                            <li role="presentation" className= {index == 0 ? "active" : " "}><a href={`#${array.subCategoryID}`} id="home-tab" role="tab" data-toggle="tab">{array.subCategoryName}</a></li>
+                                            <li key={index} role="presentation" className= {index == 0 ? "active" : ""}><a href={`#${elm}`} id="home-tab" role="tab" data-toggle="tab">{elm}</a></li>
                                         )
                                     })
                                 }
-                                
+                                */}
                                  {/* <li role="presentation" className="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab">QUEEN BED</a></li>
                                 <li role="presentation"><a href="#audio" role="tab" id="audio-tab" data-toggle="tab" aria-controls="audio">STORAGE BED</a> </li>
                                 <li role="presentation"><a href="#video" role="tab" id="video-tab" data-toggle="tab" aria-controls="video">SINGLE BED</a> </li>
@@ -258,18 +267,11 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
                              {
                                 prpList?.map((array,index) => {
                                      return (
-                                <div role="tabpanel" className="tab-pane fade active in" id={array.subCategoryID} aria-labelledby="home-tab">
+                                <div role="tabpanel" className="tab-pane fade active in" id={array.subCategoryName} aria-labelledby="home-tab">
                                  <div className="agile_ecommerce_tabs">
                                      <div className="col-md-4 agile_ecommerce_tab_left">
                                          <div className="hs-wrapper">
-                                             <img src="" alt="" className="img-responsive"/>
-                                             <img src="assets/images/4.jpg" alt="" className="img-responsive"/>
-                                             <img src="assets/images/5.jpg" alt="" className="img-responsive"/>
-                                             <img src="assets/images/6.jpg" alt="" className="img-responsive"/>
-                                             <img src="assets/images/7.jpg" alt="" className="img-responsive"/>
-                                             <img src="assets/images/3.jpg" alt="" className="img-responsive"/>
-                                             <img src="assets/images/4.jpg" alt="" className="img-responsive"/>
-                                             <img src="assets/images/5.jpg" alt="" className="img-responsive"/>
+                                             <img src={array?.photoUpload ? array.photoUpload : 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'} alt="" className="img-responsive"/>
                                              <div className="w3_hs_bottom">
                                                  <ul>
                                                      <li>
@@ -284,75 +286,13 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
                                              <p><span>$380</span><i className="item price">{`₹${array.pricePerMonth}`}</i> </p>
                                              <form action="#" method="post" onSubmit={(e) => {addToCart(e)}} id="cart-item-ad">
                                                  <input type="hidden" name="cmd" value="_cart"/>
-                                                 <input type="hidden" name="add" value="1"/>
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone1"/>
-                                                 <input type="hidden" name="amount" value="350.00" />
+                                                 <input type="hidden" name="add" value={array.productId}/>
+                                                 <input type="hidden" name="w3ls_item" value={array.productName}/>
+                                                 <input type="hidden" name="amount" value={array.pricePerMonth}/>
                                                  <button type="submit" className="w3ls-cart" >Add to cart</button>
                                              </form>
                                          </div>
                                      </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://rukminim1.flixcart.com/image/416/416/k1l1e…a-made-simple-original-imafkemefejtfh7h.jpeg?q=70" alt=" " className="img-responsive" />
-                                             <img src="assets/images/5.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/6.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/7.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/3.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/4.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/5.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/6.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Mobile Phone2</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>$330</span> <i className="item_price">$302</i></p>
-                                             <form action="#" method="post" onSubmit={(e) => {addToCart(e)}}>
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="2" />
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone2" />
-                                                 <input type="hidden" name="amount" value="302.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="assets/images/7.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/6.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/4.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/3.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/5.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/7.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/4.jpg" alt=" " className="img-responsive" />
-                                             <img src="assets/images/6.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Mobile Phone3</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>$250</span> <i className="item_price">$245</i></p>
-                                             <form action="#" method="post" onSubmit={(e) => {addToCart(e)}}>
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="3" />
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone3" />
-                                                 <input type="hidden" name="amount" value="245.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="clearfix"> </div>
                                  </div>
                              </div>
                                     )       

@@ -163,6 +163,73 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
     localStorage.setItem("cart",JSON.stringify(newCart));
    }
 
+   const checkOut = (e) => {
+        e.preventDefault();
+        let data = [];
+
+        if (!cookies.get('usr1236emmffjsv').is_customer) {
+            toast.error("Hey, Please login with your customer profile", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                dark:true,
+                progress: undefined,
+                theme:"light",
+                });
+        }else{
+
+        
+        cart?.map((array,index) => {
+                let newData = {
+                    productId : array.id,
+                    amount: '' +(array.amount),
+                    totalProduct:array.noOfProduct
+                }
+                data.push(newData);
+        })
+
+        let newdata = {
+                products:data,
+                userId:cookies.get('usr1236emmffjsv').ID
+        }
+
+
+           
+        axios.post(`http://127.0.0.1:8080/Rentalle/v1/product/transact`,newdata)
+            .then(res => {
+              
+            toast.success(res.data.message, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
+                const myTimeout = setTimeout(delayLogout, 3100);
+
+            }).catch((err)=>{
+              console.log(err.response.data.error);
+              toast.error(err.response.data.error, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                dark:true,
+                progress: undefined,
+                theme:"light",
+                });
+            })
+
+   }
+}
+
   return (
     <div>
          {/* <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} /> */}
@@ -229,23 +296,26 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
                 </div>
 
                 <div class="col-md-4 summary">
+                <form onSubmit={(e) => checkOut(e)} method = "POST">
                     <div><h5><b>Summary</b></h5></div>
                     <hr />
                     <div class="row">
                         <div class="col" >ITEMS {cart.length}</div>
                         <div class="col text-right">&#8377;  {totalProduct}</div>
                     </div>
-                    <form>
-                        <p>SHIPPING</p>
+                   
+                        {/* <p>SHIPPING</p>
                         <select><option class="text-muted">Standard-Delivery- &#8377; 5.00</option></select>
-                        <p>GIVE CODE</p>
+                        <p>GIVE CODE</p> */}
                         <input id="code" placeholder="Enter your code" />
-                    </form>
+                    
                     <div class="row" >
                         <div class="col">TOTAL PRICE</div>
-                        <div class="col text-right">&#8377; {totalProduct + 5}</div>
+                        <input type="hidden" name = "totalPrice" value = {totalProduct} /> 
+                        <div class="col text-right">&#8377; {totalProduct} </div>
                     </div>
-                    <button class="btn">CHECKOUT</button>
+                    <button class="btn" type = "submit">CHECKOUT</button>
+                    </form>
                 </div>
 
             </div>
