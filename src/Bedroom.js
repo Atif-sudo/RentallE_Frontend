@@ -147,9 +147,20 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
             draggable: true,
             progress: undefined,
             });
-        setIsLoggedIn(false);
+        localStorage.clear()
         const myTimeout = setTimeout(delayLogout, 3100);
     }
+
+
+    function loginButtonClickHandle(){
+        
+        if(isLoggedIn){
+            document.getElementById('profileModal').style.display='block';
+        }else{
+            setsignin_up_model('sign-in');
+        }
+    }
+
 
     const callGetAppProductApi = () => {
         let data = {
@@ -182,15 +193,6 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
                 theme:"light",
                 });
         })
-    }
-
-    function loginButtonClickHandle(){
-        
-        if(isLoggedIn){
-            document.getElementById('profileModal').style.display='block';
-        }else{
-            setsignin_up_model('sign-in');
-        }
     }
 
    

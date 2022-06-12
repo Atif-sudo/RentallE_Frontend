@@ -165,6 +165,19 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
 
    const checkOut = (e) => {
         e.preventDefault();
+        if(!cookies.get('usr1236emmffjsv')){
+            toast.error("Hey, Please login", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                dark:true,
+                progress: undefined,
+                theme:"light",
+                });
+        }else{
         let data = [];
 
         if (!cookies.get('usr1236emmffjsv').is_customer) {
@@ -210,6 +223,7 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
                 draggable: true,
                 progress: undefined,
                 });
+                localStorage.clear()
                 const myTimeout = setTimeout(delayLogout, 3100);
 
             }).catch((err)=>{
@@ -228,6 +242,7 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
             })
 
    }
+}
 }
 
   return (

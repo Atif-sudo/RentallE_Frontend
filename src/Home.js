@@ -176,7 +176,7 @@ function Home({isLoggedIn,setIsLoggedIn}){
             draggable: true,
             progress: undefined,
             });
-        setIsLoggedIn(false);
+       localStorage.clear()
         const myTimeout = setTimeout(delayLogout, 3100);
     }
 
@@ -381,15 +381,15 @@ function Home({isLoggedIn,setIsLoggedIn}){
                             <div className="row">
                                
                                 <div className="col-md-4" >
-                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">FullName</div>
+                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">{cookies.get('usr1236emmffjsv').FullName}</div>
                                 </div>
                                 
                                 <div className="col-md-4" >
-                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">Email</div>
+                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">{cookies.get('usr1236emmffjsv').Email}</div>
                                 </div>
                                 
                                 <div className="col-md-4">
-                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">MobileNo</div>
+                                <div class="shadow-lg p-3 mb-5 bg-body rounded profile-details">{cookies.get('usr1236emmffjsv').MobileNo}</div>
                                 </div>               
                             
                             </div>

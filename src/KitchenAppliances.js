@@ -1,16 +1,21 @@
 
 import Menu from './Menu'
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import CustomerProfile from './Pages/Single/CustomerProfile';
 import SellerProfile from './Pages/SellerProfile';
 import Cookies from 'universal-cookie';
-import { Link } from 'react-router-dom'
+import { Link,useParams} from 'react-router-dom'
 
 const KitchenAppliances = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
 
     const [sign_in_up_model,setsignin_up_model]= useState('')
+    const [cat,setCat] = useState(0);
+    const [prpList, setPrpList] = useState([]);
+    const [subCategories, setSubCategories] = useState([]);
+
+   const {id} = useParams();
     const cookies = new Cookies();
 
     const handleLogin = (e) => {
@@ -145,9 +150,54 @@ const KitchenAppliances = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart})
             draggable: true,
             progress: undefined,
             });
-        setIsLoggedIn(false);
+        localStorage.clear()
         const myTimeout = setTimeout(delayLogout, 3100);
     }
+
+
+    const callGetAppProductApi = () => {
+        let data = {
+            id:id,
+            limit:10
+        }
+        axios.post(`http://127.0.0.1:8080/Rentalle/v1/product/getProduct`,data).then((res)=>{
+
+           console.log(res.data.data)
+           let data = res.data.data;
+           setPrpList(data);
+           let subCategoryList=[];
+           data.map((elm,index)=>{
+                subCategoryList.push(elm.subCategoryName);
+           });
+           console.log('subcategory', [...new Set(subCategoryList)]);
+           setSubCategories([...new Set(subCategoryList)]);
+            
+
+        }).catch((err)=>{
+            toast.error(err.response.data.error, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                dark:true,
+                progress: undefined,
+                theme:"light",
+                });
+        })
+    }
+
+   
+    
+
+    // Add to cart
+
+    
+
+    useEffect(() => {
+      callGetAppProductApi();
+    }, [])
 
   return (
 
@@ -190,715 +240,49 @@ const KitchenAppliances = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart})
                     <div className="col-md-12 wthree_banner_bottom_right">
                         <div className="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
                             <ul id="myTab" className="nav nav-tabs" role="tablist">
-                                <li role="presentation" className="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab">MICROWAVES</a></li>
+                                {/* <li role="presentation" className="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab">MICROWAVES</a></li>
                                 <li role="presentation"><a href="#audio" role="tab" id="audio-tab" data-toggle="tab" aria-controls="audio">REFRIGERATOR</a> </li>
                                 <li role="presentation"><a href="#video" role="tab" id="video-tab" data-toggle="tab" aria-controls="video">MIXER JUICER GRINDER</a> </li>
-                                <li role="presentation"><a href="#tv" role="tab" id="tv-tab" data-toggle="tab" aria-controls="tv">OVEN TOASTER GRILLS</a> </li>
+                                <li role="presentation"><a href="#tv" role="tab" id="tv-tab" data-toggle="tab" aria-controls="tv">OVEN TOASTER GRILLS</a> </li> */}
                                                                 
                             </ul>
                          <div id="myTabContent" className="tab-content">
-                             <div role="tabpanel" className="tab-pane fade active in" id="home" aria-labelledby="home-tab">
+                         {
+                                prpList?.map((array,index) => {
+                                     return (
+                                <div role="tabpanel" className="tab-pane fade active in" id={array.subCategoryName} aria-labelledby="home-tab">
                                  <div className="agile_ecommerce_tabs">
                                      <div className="col-md-4 agile_ecommerce_tab_left">
                                          <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/710GdqOStIL._AC_UY218_.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://m.media-amazon.com/images/I/710GdqOStIL._AC_UY218_.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://m.media-amazon.com/images/I/710GdqOStIL._AC_UY218_.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://m.media-amazon.com/images/I/710GdqOStIL._AC_UY218_.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://m.media-amazon.com/images/I/710GdqOStIL._AC_UY218_.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://m.media-amazon.com/images/I/710GdqOStIL._AC_UY218_.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://m.media-amazon.com/images/I/710GdqOStIL._AC_UY218_.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://m.media-amazon.com/images/I/710GdqOStIL._AC_UY218_.jpg" alt="" className="img-responsive"/>
+                                             <img src={array?.photoUpload ? array.photoUpload : 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'} alt="" className="img-responsive"/>
                                              <div className="w3_hs_bottom">
                                                  <ul>
                                                      <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                                                         <Link to="/singleproduct" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
                                                      </li>
                                                  </ul>
                                              </div>
                                          </div>
 
-                                         <h5><a href="single.html">Samsung 23 L Solo Microwave Oven (MS23A301TAK/TL, Black, Auto Cook)</a> </h5>
+                                         <h5><a href="single.html">{array.productName}</a> </h5>
                                          <div className="simpleCart_shelfItem">
-                                             <p><span>₹1080</span><i className="item price">₹550/mon</i> </p>
-                                             <form action="#" method="post">
+                                             <p><span>$380</span><i className="item price">{`₹${array.pricePerMonth}`}</i> </p>
+                                             <form action="#" method="post" onSubmit={(e) => {addToCart(e)}} id="cart-item-ad">
                                                  <input type="hidden" name="cmd" value="_cart"/>
-                                                 <input type="hidden" name="add" value="1"/>
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone1"/>
-                                                 <input type="hidden" name="amount" value="350.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
+                                                 <input type="hidden" name="add" value={array.productId}/>
+                                                 <input type="hidden" name="w3ls_item" value={array.productName}/>
+                                                 <input type="hidden" name="amount" value={array.pricePerMonth}/>
+                                                 <button type="submit" className="w3ls-cart" >Add to cart</button>
                                              </form>
                                          </div>
                                      </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/610VIYpm+FL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/610VIYpm+FL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/610VIYpm+FL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/610VIYpm+FL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/610VIYpm+FL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/610VIYpm+FL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/610VIYpm+FL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/610VIYpm+FL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Samsung 23 L Solo Microwave Oven (MS23J5133AG/TL, Black)</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹1350</span> <i className="item_price">₹842/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone2" />
-                                                 <input type="hidden" name="amount" value="302.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/61pDIEAuU1L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61pDIEAuU1L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61pDIEAuU1L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61pDIEAuU1L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61pDIEAuU1L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61pDIEAuU1L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61pDIEAuU1L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61pDIEAuU1L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Bajaj 1701 MT 17L Solo Microwave Oven, White</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹950</span> <i className="item_price">₹845/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone3" />
-                                                 <input type="hidden" name="amount" value="245.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/71Odjpsi1NL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Odjpsi1NL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Odjpsi1NL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Odjpsi1NL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Odjpsi1NL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Odjpsi1NL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Odjpsi1NL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Odjpsi1NL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Panasonic 20L Solo Microwave Oven (NN-ST26JMFDG, Silver, 51 Auto Menus)</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹860</span> <i className="item_price">₹599/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone3" />
-                                                 <input type="hidden" name="amount" value="245.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/81Fi-Kl1jEL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81Fi-Kl1jEL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81Fi-Kl1jEL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81Fi-Kl1jEL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81Fi-Kl1jEL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81Fi-Kl1jEL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81Fi-Kl1jEL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81Fi-Kl1jEL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Panasonic 20 L Solo Microwave Oven (NN-SM25JBFDG,Black)</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹699</span> <i className="item_price">₹359/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone3" />
-                                                 <input type="hidden" name="amount" value="245.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/611wMY1y93L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/611wMY1y93L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/611wMY1y93L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/611wMY1y93L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/611wMY1y93L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/611wMY1y93L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/611wMY1y93L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/611wMY1y93L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">LG 20 L Solo Microwave Oven (MS2043DB, Black)</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹399</span> <i className="item_price">₹259/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone3" />
-                                                 <input type="hidden" name="amount" value="245.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="clearfix"> </div>
                                  </div>
                              </div>
+                                    )       
 
-                             
-                             <div role="tabpanel" className="tab-pane fade" id="audio" aria-labelledby="audio-tab">
-                                 <div className="agile_ecommerce_tabs">
-                                     
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558143-247-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558143-247-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558143-247-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558143-247-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558143-247-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558143-247-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558143-247-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558143-247-1.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Samsung RR21T2H2XCR 198 L 4 Star Inverter Direct Cool Single Door Refrigerator</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹2320</span> <i className="item_price">₹1350/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Headphones" />
-                                                 <input type="hidden" name="amount" value="150.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558162-210-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558162-210-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558162-210-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558162-210-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558162-210-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558162-210-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558162-210-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558162-210-1.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Samsung RR21T2H2WCU 198 L 5 Star Inverter Direct Cool Single Door Refrigerator</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹2220</span> <i className="item_price">₹800/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558148-141-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558148-141-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558148-141-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558148-141-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558148-141-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558148-141-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558148-141-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558148-141-1.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Whirlpool WDE 205 CLS 2S 190 L 2 Star Direct Cool Single Door Refrigerator</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹2020</span> <i className="item_price">₹860/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/582800-100-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/582800-100-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/582800-100-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/582800-100-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/582800-100-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/582800-100-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/582800-100-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/582800-100-1.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">LG GL-D201ABPY 190 L 4 Star Direct Cool Single Door Refrigerator</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹2000</span> <i className="item_price">₹560/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558487-164-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558487-164-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558487-164-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558487-164-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558487-164-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558487-164-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558487-164-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558487-164-1.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Haier HED-20FDS 195 L 4 Star Direct Cool Single Door Refrigerator</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹920</span> <i className="item_price">₹569/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558812-196-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558812-196-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558812-196-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558812-196-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558812-196-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558812-196-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558812-196-1.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.mspimages.in/c/tr:w-375,h-300,c-at_max/558812-196-1.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Whirlpool WDE 205 Roy 3S 190 L 3 Star Direct Cool Single Door Refrigerator</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹1520</span> <i className="item_price">₹1069/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="clearfix"> </div>
-                                 </div>
-                             </div>
-
-
-                             <div role="tabpanel" className="tab-pane fade" id="video" aria-labelledby="video-tab">
-                                 <div className="agile_ecommerce_tabs">
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/61C4EzIyQmL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61C4EzIyQmL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61C4EzIyQmL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61C4EzIyQmL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61C4EzIyQmL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61C4EzIyQmL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61C4EzIyQmL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61C4EzIyQmL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Nutri-Blend Complete Kitchen Machine, 22000 RPM Mixer-Grinder, Blender, Chopper, Juicer, SS Blades, 4 Unbreakable Jars, 2 Years Warranty, 400 W-Champagne, Online Recipe Book by Chef Sanjeev Kapoor</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹1880</span> <i className="item_price">₹850/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Laptop" />
-                                                 <input type="hidden" name="amount" value="850.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/81+M1QrVNIL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81+M1QrVNIL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81+M1QrVNIL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81+M1QrVNIL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81+M1QrVNIL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81+M1QrVNIL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81+M1QrVNIL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/81+M1QrVNIL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Prestige Iris 750 Watt Mixer Grinder with 3 Stainless Steel Jar + 1 Juicer Jar (White and Blue)</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹960</span> <i className="item_price">₹469/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Notebook" />
-                                                 <input type="hidden" name="amount" value="280.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src=" https://m.media-amazon.com/images/I/51iNZ4KfXzL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src=" https://m.media-amazon.com/images/I/51iNZ4KfXzL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src=" https://m.media-amazon.com/images/I/51iNZ4KfXzL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src=" https://m.media-amazon.com/images/I/51iNZ4KfXzL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src=" https://m.media-amazon.com/images/I/51iNZ4KfXzL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src=" https://m.media-amazon.com/images/I/51iNZ4KfXzL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src=" https://m.media-amazon.com/images/I/51iNZ4KfXzL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src=" https://m.media-amazon.com/images/I/51iNZ4KfXzL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Philips Juicer Mixer Grinder - HL7576 (Blue_Free Size)</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹520</span> <i className="item_price">₹290/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Kid's Toy" />
-                                                 <input type="hidden" name="amount" value="80.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/61km34kPOOL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61km34kPOOL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61km34kPOOL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61km34kPOOL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61km34kPOOL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61km34kPOOL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61km34kPOOL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61km34kPOOL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Sujata Powermatic Plus, Juicer Mixer Grinder with Chutney Jar, 900 Watts, 3 Jars (White)</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹1520</span> <i className="item_price">₹1190/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Kid's Toy" />
-                                                 <input type="hidden" name="amount" value="80.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                    
-                                     
-                                     <div className="clearfix"> </div>
-                                 </div>
-                             </div>
-                             <div role="tabpanel" className="tab-pane fade" id="tv" aria-labelledby="tv-tab">
-                                 <div className="agile_ecommerce_tabs">
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/618O0ywM1SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/618O0ywM1SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/618O0ywM1SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/618O0ywM1SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/618O0ywM1SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/618O0ywM1SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/618O0ywM1SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/618O0ywM1SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Philips HD6975/00 25 Litre Digital Oven Toaster Grill, Grey, 25 liter</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹950</span> <i className="item_price">₹520/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Refrigerator" />
-                                                 <input type="hidden" name="amount" value="820.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/71Kpz-HFmyL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Kpz-HFmyL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Kpz-HFmyL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Kpz-HFmyL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Kpz-HFmyL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Kpz-HFmyL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Kpz-HFmyL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/71Kpz-HFmyL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">AGARO Marvel 48 Liters Oven Toaster Griller, Motorised Rotisserie and Convection Cake Baking OTG with 3 Heating Mode , (Black)</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹700</span> <i className="item_price">₹580/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="LED Tv"/>
-                                                 <input type="hidden" name="amount" value="680.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/614cZL1O0SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614cZL1O0SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614cZL1O0SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614cZL1O0SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614cZL1O0SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614cZL1O0SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614cZL1O0SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614cZL1O0SL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Borosil Prima 48 L Oven Toaster & Grill, Motorised Rotisserie & Convection Heating, 6 Heating Modes, Silver</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹1220</span> <i className="item_price">₹710/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/61YNUBs52QL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61YNUBs52QL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61YNUBs52QL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61YNUBs52QL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61YNUBs52QL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61YNUBs52QL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61YNUBs52QL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61YNUBs52QL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Croma Oven Toaster Grill 48L OTG with Convection mode, Temperature Control, 60 mins timer, Motorized Rotisserie, Multiple Heating Modes (2000W, CRAO0063, Black)</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹1020</span> <i className="item_price">₹299/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/61BXm989VZL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61BXm989VZL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61BXm989VZL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61BXm989VZL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61BXm989VZL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61BXm989VZL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61BXm989VZL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/61BXm989VZL._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">AGARO ROYAL 49 Litres Oven Toaster Griller (OTG), Motorised Rotisserie, Convection, 5 Heating Functions, 2000W, Suitable for Cake Baking, Black, 49L (33540)</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹520</span> <i className="item_price">₹200/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://m.media-amazon.com/images/I/614jzQFw61L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614jzQFw61L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614jzQFw61L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614jzQFw61L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614jzQFw61L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614jzQFw61L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614jzQFw61L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://m.media-amazon.com/images/I/614jzQFw61L._AC_UY218_.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <a href="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><a href="single.html">Philips HD6976/00 36-liters Digital Oven Toaster Grill, 2000W, with Opti Temp Technology, Temperature control, Convection Mode, 7-level browning function & preset Indian Menus</a></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹520</span> <i className="item_price">₹290/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="clearfix"> </div>
-                                 </div>
-                             </div>
+                                    })
+                             }
+                            
                              { !isLoggedIn ?
             <div className={"modal  " +sign_in_up_model} id="myModal88" tabIndex="-1">
                 <div className="modal-dialog modal-lg">

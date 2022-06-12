@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import Menu from './Menu'
-import { Link } from 'react-router-dom'
+import { Link,useParams } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import CustomerProfile from './Pages/Single/CustomerProfile';
@@ -10,6 +10,10 @@ import Cookies from 'universal-cookie';
 const Vehicles = ({isLoggedIn,setIsLoggedIn,cart ,setCart, addToCart}) => {
 
     const [sign_in_up_model,setsignin_up_model]= useState('')
+    const [prpList, setPrpList] = useState([]);
+    const [subCategories, setSubCategories] = useState([]);
+
+   const {id} = useParams();
     const cookies = new Cookies();
 
     const handleLogin = (e) => {
@@ -144,9 +148,56 @@ const Vehicles = ({isLoggedIn,setIsLoggedIn,cart ,setCart, addToCart}) => {
             draggable: true,
             progress: undefined,
             });
-        setIsLoggedIn(false);
+        localStorage.clear()
         const myTimeout = setTimeout(delayLogout, 3100);
     }
+
+
+    const callGetAppProductApi = () => {
+        let data = {
+            id:id,
+            limit:10
+        }
+        axios.post(`http://127.0.0.1:8080/Rentalle/v1/product/getProduct`,data).then((res)=>{
+
+           console.log(res.data.data)
+           let data = res.data.data;
+           setPrpList(data);
+           let subCategoryList=[];
+           data.map((elm,index)=>{
+                subCategoryList.push(elm.subCategoryName);
+           });
+           console.log('subcategory', [...new Set(subCategoryList)]);
+           setSubCategories([...new Set(subCategoryList)]);
+            
+
+        }).catch((err)=>{
+            toast.error(err.response.data.error, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                dark:true,
+                progress: undefined,
+                theme:"light",
+                });
+        })
+    }
+
+   
+    
+
+    // Add to cart
+
+    
+
+    useEffect(() => {
+      callGetAppProductApi();
+    }, [])
+    
+
 
   return (
     <div>
@@ -186,963 +237,53 @@ const Vehicles = ({isLoggedIn,setIsLoggedIn,cart ,setCart, addToCart}) => {
 
                     <div className="col-md-12 wthree_banner_bottom_right">
                         <div className="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
-                            <ul id="myTab" className="nav nav-tabs" role="tablist">
+                            {/* <ul id="myTab" className="nav nav-tabs" role="tablist">
                                 <li role="presentation" className="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab">BICYCLE</a></li>
                                 <li role="presentation"><Link to="#audio" role="tab" id="audio-tab" data-toggle="tab" aria-controls="audio">SCOOTY</Link> </li>
                                 <li role="presentation"><Link to="#video" role="tab" id="video-tab" data-toggle="tab" aria-controls="video">BIKE</Link> </li>
                                 <li role="presentation"><Link to="#tv" role="tab" id="tv-tab" data-toggle="tab" aria-controls="tv">CAR</Link> </li>
                                 
-                            </ul>
+                            </ul> */}
                          <div id="myTabContent" className="tab-content">
-                             <div role="tabpanel" className="tab-pane fade active in" id="home" aria-labelledby="home-tab">
+                             
+                         {
+                                prpList?.map((array,index) => {
+                                     return (
+                                <div role="tabpanel" className="tab-pane fade active in" id={array.subCategoryName} aria-labelledby="home-tab">
                                  <div className="agile_ecommerce_tabs">
-                                    
                                      <div className="col-md-4 agile_ecommerce_tab_left">
                                          <div className="hs-wrapper">
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/YeIlQgvn_mobile_MTB-Red-Mobile.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/YeIlQgvn_mobile_MTB-Red-Mobile.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/YeIlQgvn_mobile_MTB-Red-Mobile.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/YeIlQgvn_mobile_MTB-Red-Mobile.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/YeIlQgvn_mobile_MTB-Red-Mobile.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/YeIlQgvn_mobile_MTB-Red-Mobile.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/YeIlQgvn_mobile_MTB-Red-Mobile.jpg" alt="" className="img-responsive"/>
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/YeIlQgvn_mobile_MTB-Red-Mobile.jpg" alt="" className="img-responsive"/>
+                                             <img src={array?.photoUpload ? array.photoUpload : 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'} alt="" className="img-responsive"/>
                                              <div className="w3_hs_bottom">
                                                  <ul>
                                                      <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
+                                                         <Link to="/singleproduct" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
                                                      </li>
                                                  </ul>
                                              </div>
                                          </div>
 
-                                         <h5><Link to="#">MTB 21 Speed Bike</Link> </h5>
+                                         <h5><a href="single.html">{array.productName}</a> </h5>
                                          <div className="simpleCart_shelfItem">
-                                             <p><span>₹3340</span><i className="item price">₹1350/mon</i> </p>
-                                             <form action="#" method="post">
+                                             <p><span>$380</span><i className="item price">{`₹${array.pricePerMonth}`}</i> </p>
+                                             <form action="#" method="post" onSubmit={(e) => {addToCart(e)}} id="cart-item-ad">
                                                  <input type="hidden" name="cmd" value="_cart"/>
-                                                 <input type="hidden" name="add" value="1"/>
-                                                 <input type="hidden" name="w3ls_item" value="MTB 21 Speed Bike"/>
-                                                 <input type="hidden" name="amount" value="1350.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
+                                                 <input type="hidden" name="add" value={array.productId}/>
+                                                 <input type="hidden" name="w3ls_item" value={array.productName}/>
+                                                 <input type="hidden" name="amount" value={array.pricePerMonth}/>
+                                                 <button type="submit" className="w3ls-cart" >Add to cart</button>
                                              </form>
                                          </div>
                                      </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/9JYQi0R9_mobile_I-geared-Steel-Mobile-2.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/9JYQi0R9_mobile_I-geared-Steel-Mobile-2.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/9JYQi0R9_mobile_I-geared-Steel-Mobile-2.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/9JYQi0R9_mobile_I-geared-Steel-Mobile-2.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/9JYQi0R9_mobile_I-geared-Steel-Mobile-2.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/9JYQi0R9_mobile_I-geared-Steel-Mobile-2.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/9JYQi0R9_mobile_I-geared-Steel-Mobile-2.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/9JYQi0R9_mobile_I-geared-Steel-Mobile-2.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Single Gear Alloy Bike</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹2499</span> <i className="item_price">₹1000/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Single Gear Alloy Bike" />
-                                                 <input type="hidden" name="amount" value="1000.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/OgQUQARf_mobile_I-geared-Steel-Mobile-3.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/OgQUQARf_mobile_I-geared-Steel-Mobile-3.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/OgQUQARf_mobile_I-geared-Steel-Mobile-3.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/OgQUQARf_mobile_I-geared-Steel-Mobile-3.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/OgQUQARf_mobile_I-geared-Steel-Mobile-3.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/OgQUQARf_mobile_I-geared-Steel-Mobile-3.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/OgQUQARf_mobile_I-geared-Steel-Mobile-3.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/OgQUQARf_mobile_I-geared-Steel-Mobile-3.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="single.html">Single gear Steel Bike</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹2250</span> <i className="item_price">₹840/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone3" />
-                                                 <input type="hidden" name="amount" value="245.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/gkZLjH16_mobile_Hybrid-Black-Green-Mobile.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/gkZLjH16_mobile_Hybrid-Black-Green-Mobile.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/gkZLjH16_mobile_Hybrid-Black-Green-Mobile.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/gkZLjH16_mobile_Hybrid-Black-Green-Mobile.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/gkZLjH16_mobile_Hybrid-Black-Green-Mobile.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/gkZLjH16_mobile_Hybrid-Black-Green-Mobile.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/gkZLjH16_mobile_Hybrid-Black-Green-Mobile.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://assets.furlenco.com/image/upload/c_fit,dpr_1.0,f_auto,q_auto,w_360/v1/furlenco-images/gkZLjH16_mobile_Hybrid-Black-Green-Mobile.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="single.html">Hybrid 21 Speed Bike</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹3590</span> <i className="item_price">₹1440/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Mobile Phone3" />
-                                                 <input type="hidden" name="amount" value="1440.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="clearfix"> </div>
                                  </div>
                              </div>
-                             <div role="tabpanel" className="tab-pane fade" id="audio" aria-labelledby="audio-tab">
-                                 <div className="agile_ecommerce_tabs">
-                                     
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122309/vieste-300-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122309/vieste-300-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122309/vieste-300-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122309/vieste-300-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122309/vieste-300-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122309/vieste-300-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122309/vieste-300-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122309/vieste-300-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Keeway Viesta 300</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹8000</span> <i className="item_price">₹5560/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Headphones" />
-                                                 <input type="hidden" name="amount" value="150.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122311/sixties-300i-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122311/sixties-300i-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122311/sixties-300i-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122311/sixties-300i-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122311/sixties-300i-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122311/sixties-300i-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122311/sixties-300i-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/122311/sixties-300i-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Keeway Sixties 300i</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹7969</span> <i className="item_price">₹5899/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
+                                    )       
 
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44686/activa-6g-right-front-three-quarter.jpeg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44686/activa-6g-right-front-three-quarter.jpeg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44686/activa-6g-right-front-three-quarter.jpeg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44686/activa-6g-right-front-three-quarter.jpeg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44686/activa-6g-right-front-three-quarter.jpeg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44686/activa-6g-right-front-three-quarter.jpeg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44686/activa-6g-right-front-three-quarter.jpeg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44686/activa-6g-right-front-three-quarter.jpeg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Honda Activa 6G</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹6969</span> <i className="item_price">₹4869/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/102709/ntorq-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/102709/ntorq-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/102709/ntorq-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/102709/ntorq-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/102709/ntorq-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/102709/ntorq-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/102709/ntorq-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/102709/ntorq-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">TVS Ntroq 125</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹5469</span> <i className="item_price">₹3869/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/115139/access-right-front-three-quarter-5.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/115139/access-right-front-three-quarter-5.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/115139/access-right-front-three-quarter-5.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/115139/access-right-front-three-quarter-5.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/115139/access-right-front-three-quarter-5.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/115139/access-right-front-three-quarter-5.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/115139/access-right-front-three-quarter-5.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/115139/access-right-front-three-quarter-5.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Suzuki Access 125</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹7569</span> <i className="item_price">₹4069/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/49460/dio-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/49460/dio-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/49460/dio-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/49460/dio-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/49460/dio-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/49460/dio-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/49460/dio-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/49460/dio-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Honda Dio</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹8069</span> <i className="item_price">₹5569/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://imgd.aeplcdn.com/310x174/bw/models/tvs-jupiter-sheet-metal-wheel20210111113827.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/bw/models/tvs-jupiter-sheet-metal-wheel20210111113827.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/bw/models/tvs-jupiter-sheet-metal-wheel20210111113827.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/bw/models/tvs-jupiter-sheet-metal-wheel20210111113827.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/bw/models/tvs-jupiter-sheet-metal-wheel20210111113827.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/bw/models/tvs-jupiter-sheet-metal-wheel20210111113827.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/bw/models/tvs-jupiter-sheet-metal-wheel20210111113827.jpg" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/bw/models/tvs-jupiter-sheet-metal-wheel20210111113827.jpg" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">TVS Jupiter</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹8869</span> <i className="item_price">₹5069/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44860/iqube-left-front-three-quarter-2.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44860/iqube-left-front-three-quarter-2.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44860/iqube-left-front-three-quarter-2.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44860/iqube-left-front-three-quarter-2.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44860/iqube-left-front-three-quarter-2.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44860/iqube-left-front-three-quarter-2.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44860/iqube-left-front-three-quarter-2.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/44860/iqube-left-front-three-quarter-2.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">TVS iQube</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹10000</span> <i className="item_price">₹8649/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/114923/burgman-street-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/114923/burgman-street-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/114923/burgman-street-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/114923/burgman-street-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/114923/burgman-street-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/114923/burgman-street-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/114923/burgman-street-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <img src="https://imgd.aeplcdn.com/310x174/n/cw/ec/114923/burgman-street-125-right-front-three-quarter.jpeg?isig=0" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal1"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Suzuki Burgman Street 125</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹11000</span> <i className="item_price">₹9089/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Audio Player" />
-                                                 <input type="hidden" name="amount" value="180.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="clearfix"> </div>
-                                 </div>
-                             </div>
-                             <div role="tabpanel" className="tab-pane fade" id="video" aria-labelledby="video-tab">
-                                 <div className="agile_ecommerce_tabs">
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/himalayan/royal-enfield-himalayan.webp?v=30" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/himalayan/royal-enfield-himalayan.webp?v=30" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/himalayan/royal-enfield-himalayan.webp?v=30" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/himalayan/royal-enfield-himalayan.webp?v=30" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/himalayan/royal-enfield-himalayan.webp?v=30" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/himalayan/royal-enfield-himalayan.webp?v=30" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/himalayan/royal-enfield-himalayan.webp?v=30" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/himalayan/royal-enfield-himalayan.webp?v=30" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Royal Enfield Himalayan</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹18880</span> <i className="item_price">₹12850/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Laptop" />
-                                                 <input type="hidden" name="amount" value="850.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/classic-chrome/royal-enfield-classic-chrome.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/classic-chrome/royal-enfield-classic-chrome.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/classic-chrome/royal-enfield-classic-chrome.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/classic-chrome/royal-enfield-classic-chrome.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/classic-chrome/royal-enfield-classic-chrome.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/classic-chrome/royal-enfield-classic-chrome.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/classic-chrome/royal-enfield-classic-chrome.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/classic-chrome/royal-enfield-classic-chrome.webp?v=6" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Royal Enfield Classic Chrome</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹20290</span> <i className="item_price">₹16280/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Notebook" />
-                                                 <input type="hidden" name="amount" value="280.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/bullet-350/royal-enfield-bullet-350.webp?v=31" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/bullet-350/royal-enfield-bullet-350.webp?v=31" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/bullet-350/royal-enfield-bullet-350.webp?v=31" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/bullet-350/royal-enfield-bullet-350.webp?v=31" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/bullet-350/royal-enfield-bullet-350.webp?v=31" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/bullet-350/royal-enfield-bullet-350.webp?v=31" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/bullet-350/royal-enfield-bullet-350.webp?v=31" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/royal-enfield/bullet-350/royal-enfield-bullet-350.webp?v=31" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Royal Enfield Bullet 350</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹22120</span> <i className="item_price">₹18750/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Kid's Toy" />
-                                                 <input type="hidden" name="amount" value="80.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://images.carandbike.com/bike-images/medium/hero/splendor-plus/hero-splendor-plus.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/hero/splendor-plus/hero-splendor-plus.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/hero/splendor-plus/hero-splendor-plus.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/hero/splendor-plus/hero-splendor-plus.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/hero/splendor-plus/hero-splendor-plus.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/hero/splendor-plus/hero-splendor-plus.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/hero/splendor-plus/hero-splendor-plus.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/hero/splendor-plus/hero-splendor-plus.webp?v=6" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Hero Splender</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹8120</span> <i className="item_price">₹3750/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Kid's Toy" />
-                                                 <input type="hidden" name="amount" value="80.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/cb-shine/honda-cb-shine.webp?v=21" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/cb-shine/honda-cb-shine.webp?v=21" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/cb-shine/honda-cb-shine.webp?v=21" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/cb-shine/honda-cb-shine.webp?v=21" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/cb-shine/honda-cb-shine.webp?v=21" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/cb-shine/honda-cb-shine.webp?v=21" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/cb-shine/honda-cb-shine.webp?v=21" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/cb-shine/honda-cb-shine.webp?v=21" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Honda CB Shine</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹9120</span> <i className="item_price">₹4050/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Kid's Toy" />
-                                                 <input type="hidden" name="amount" value="80.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/sp-125/honda-sp-125.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/sp-125/honda-sp-125.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/sp-125/honda-sp-125.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/sp-125/honda-sp-125.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/sp-125/honda-sp-125.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/sp-125/honda-sp-125.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/sp-125/honda-sp-125.webp?v=6" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/honda/sp-125/honda-sp-125.webp?v=6" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Honda SP 125</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹8120</span> <i className="item_price">₹4000/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Kid's Toy" />
-                                                 <input type="hidden" name="amount" value="80.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://images.carandbike.com/bike-images/medium/yamaha/mt-15/yamaha-mt-15.webp?v=10" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/yamaha/mt-15/yamaha-mt-15.webp?v=10" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/yamaha/mt-15/yamaha-mt-15.webp?v=10" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/yamaha/mt-15/yamaha-mt-15.webp?v=10" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/yamaha/mt-15/yamaha-mt-15.webp?v=10" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/yamaha/mt-15/yamaha-mt-15.webp?v=10" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/yamaha/mt-15/yamaha-mt-15.webp?v=10" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/yamaha/mt-15/yamaha-mt-15.webp?v=10" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Yamaha MT-15</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹10120</span> <i className="item_price">₹6000/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Kid's Toy" />
-                                                 <input type="hidden" name="amount" value="80.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://images.carandbike.com/bike-images/medium/bajaj/pulsar-150/bajaj-pulsar-150.webp?v=57" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/bajaj/pulsar-150/bajaj-pulsar-150.webp?v=57" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/bajaj/pulsar-150/bajaj-pulsar-150.webp?v=57" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/bajaj/pulsar-150/bajaj-pulsar-150.webp?v=57" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/bajaj/pulsar-150/bajaj-pulsar-150.webp?v=57" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/bajaj/pulsar-150/bajaj-pulsar-150.webp?v=57" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/bajaj/pulsar-150/bajaj-pulsar-150.webp?v=57" alt=" " className="img-responsive" />
-                                             <img src="https://images.carandbike.com/bike-images/medium/bajaj/pulsar-150/bajaj-pulsar-150.webp?v=57" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal2"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Bajaj Pulsar 150</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹9120</span> <i className="item_price">₹6899/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Kid's Toy" />
-                                                 <input type="hidden" name="amount" value="80.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="clearfix"> </div>
-                                 </div>
-                             </div>
-                             <div role="tabpanel" className="tab-pane fade" id="tv" aria-labelledby="tv-tab">
-                                 <div className="agile_ecommerce_tabs">
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://nriol.com/images/Toyota-innova-crysta.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/Toyota-innova-crysta.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/Toyota-innova-crysta.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/Toyota-innova-crysta.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/Toyota-innova-crysta.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/Toyota-innova-crysta.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/Toyota-innova-crysta.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/Toyota-innova-crysta.png" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Toyota Innova Cystra</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹29050</span> <i className="item_price">₹20820/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Refrigerator" />
-                                                 <input type="hidden" name="amount" value="820.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://nriol.com/images/toyota-glanza.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-glanza.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-glanza.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-glanza.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-glanza.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-glanza.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-glanza.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-glanza.png" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Toyota Glanza</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹22700</span> <i className="item_price">₹20680/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="LED Tv"/>
-                                                 <input type="hidden" name="amount" value="680.00"/>
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://nriol.com/images/toyota-urban-crusier.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-urban-crusier.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-urban-crusier.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-urban-crusier.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-urban-crusier.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-urban-crusier.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-urban-crusier.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/toyota-urban-crusier.png" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Toyota Urban Cruiser</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹25520</span> <i className="item_price">₹20510/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     {/*Tata Motors*/}
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://nriol.com/images/tata-altroz.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tata-altroz.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tata-altroz.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tata-altroz.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tata-altroz.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tata-altroz.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tata-altroz.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tata-altroz.png" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Tata Altroz</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹20520</span> <i className="item_price">₹14510/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://nriol.com/images/safari-storme.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/safari-storme.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/safari-storme.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/safari-storme.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/safari-storme.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/safari-storme.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/safari-storme.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/safari-storme.png" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Tata Safari Strome</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹21520</span> <i className="item_price">₹16590/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://nriol.com/images/tiago-jtp.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tiago-jtp.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tiago-jtp.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tiago-jtp.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tiago-jtp.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tiago-jtp.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tiago-jtp.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/tiago-jtp.png" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Tata Sumo Gold</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹29520</span> <i className="item_price">₹24590/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-
-                                     {/*Honda Cars*/}
-
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://nriol.com/images/city.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/city.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/city.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/city.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/city.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/city.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/city.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/city.png" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Honda City</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹26520</span> <i className="item_price">₹24660/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://nriol.com/images/amaze.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/amaze.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/amaze.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/amaze.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/amaze.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/amaze.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/amaze.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/amaze.png" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Honda Amaze</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹30520</span> <i className="item_price">₹28660/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-
-                                     <div className="col-md-4 agile_ecommerce_tab_left">
-                                         <div className="hs-wrapper">
-                                             <img src="https://nriol.com/images/accord-hybrid.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/accord-hybrid.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/accord-hybrid.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/accord-hybrid.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/accord-hybrid.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/accord-hybrid.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/accord-hybrid.png" alt=" " className="img-responsive" />
-                                             <img src="https://nriol.com/images/accord-hybrid.png" alt=" " className="img-responsive" />
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="#" data-toggle="modal" data-target="#myModal3"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
-                                         </div>
-                                         <h5><Link to="#">Honda Accord Hybrid</Link></h5>
-                                         <div className="simpleCart_shelfItem">
-                                             <p><span>₹32520</span> <i className="item_price">₹29669/mon</i></p>
-                                             <form action="#" method="post">
-                                                 <input type="hidden" name="cmd" value="_cart" />
-                                                 <input type="hidden" name="add" value="1" />
-                                                 <input type="hidden" name="w3ls_item" value="Washing Machine" />
-                                                 <input type="hidden" name="amount" value="510.00" />
-                                                 <button type="submit" className="w3ls-cart">Add to cart</button>
-                                             </form>
-                                         </div>
-                                     </div>
-                                     <div className="clearfix"> </div>
-                                 </div>
-                             </div>
+                                    })
+                             }
+                            
+                             
+                            
                              { !isLoggedIn ?
             <div className={"modal  " +sign_in_up_model} id="myModal88" tabIndex="-1">
                 <div className="modal-dialog modal-lg">
