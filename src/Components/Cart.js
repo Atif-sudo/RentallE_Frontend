@@ -232,7 +232,7 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
                     <div><h5><b>Summary</b></h5></div>
                     <hr />
                     <div class="row">
-                        <div class="col" >ITEMS 3</div>
+                        <div class="col" >ITEMS {cart.length}</div>
                         <div class="col text-right">&#8377;  {totalProduct}</div>
                     </div>
                     <form>

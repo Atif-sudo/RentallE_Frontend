@@ -157,7 +157,7 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
         }
         axios.post(`http://127.0.0.1:8080/Rentalle/v1/product/getProduct`,data).then((res)=>{
 
-        //    console.log(res.data.data)
+           console.log(res.data.data)
            setPrpList(res.data.data);
             
 
