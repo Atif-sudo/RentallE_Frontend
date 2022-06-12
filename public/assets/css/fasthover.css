@@ -16,7 +16,7 @@
 .hs-wrapper img{
 	top: 0px;
 	left: 0px;
-	position: absolute;
+	/*position: absolute;*/
 	-webkit-animation: showMe 3s linear infinite 0s forwards;
 	-moz-animation: showMe 3s linear infinite 0s forwards;
 	-o-animation: showMe 3s linear infinite 0s forwards;
@@ -136,7 +136,7 @@
 	opacity: 1;
 	box-shadow: 0 0 0 5px rgba(255,255,255,0.3) inset;
 }
-
+/*
 @-webkit-keyframes showMe {
     0% { visibility: visible; z-index: 100; }
 	12.5% { visibility: visible; z-index: 100; }
@@ -171,6 +171,7 @@
 	25% { visibility: hidden; z-index: 0; }
     100% { visibility: hidden; z-index: 0; }
 }
+*/
 @media (max-width: 1080px){
 	.hs-wrapper {
 		width: 158px;

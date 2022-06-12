@@ -24,59 +24,59 @@ function Menu(){
 
                     <div className="collapse navbar-collapse" id="bs-megadropdown-tabs">
                         <ul className="nav navbar-nav">
-                            <li><a href="index.html"  className="act">
+                            <li>
                                 
-                                    <Link to= "/">Home</Link></a> </li>
+                                    <Link to= "/">Home</Link> </li>
 
                             <li className="dropdown">
-                                <a href="#" className="dropdown-toggle" data-toggle="dropdown">Products <b className="caret"></b> </a>
+                                <a href="javascript:void(0)" className="dropdown-toggle" data-toggle="dropdown">Products <b className="caret"></b> </a>
                                 <ul className="dropdown-menu multi-column columns-3">
                                     <div className="row">
                                         <div className="col-sm-3">
                                             <ul className="multi-column-dropdown">
                                                 <h6>Bed Room</h6>
-                                                <li><Link to="/bedroom/1#home">Queen Bed</Link> </li>
-                                                <li><Link to="/bedroom/1#audio">Storage Bed </Link> </li>
-                                                <li><Link to="/bedroom/1#video">Single Bed</Link> </li>
-                                                <li><Link to="/bedroom/1#tv">Multi Functional <span>New</span></Link> </li>
-                                                <li><Link to="/bedroom/1#kitchen">Bedroom Storage</Link> </li>
+                                                <li><Link to="/bedroom/1">Queen Bed</Link> </li>
+                                                <li><Link to="/bedroom/1">Storage Bed </Link> </li>
+                                                <li><Link to="/bedroom/1">Single Bed</Link> </li>
+                                                <li><Link to="/bedroom/1">Multi Functional <span>New</span></Link> </li>
+                                                <li><Link to="/bedroom/1">Bedroom Storage</Link> </li>
                                             </ul>
                                         </div>
                                         <div className="col-sm-3">
                                             <ul className="multi-column-dropdown">
                                                 <h6>Living Room</h6>
-                                                <li><Link to="/livingroom/2#home">Sofa</Link> </li>
-                                                <li><Link to="/livingroom/2#audio">Sofa Sets </Link> </li>
-                                                <li><Link to="/livingroom/2#video">Recliner<span>New</span></Link> </li>
-                                                <li><Link to="/livingroom/2#tv">Multi functional</Link> </li>
+                                                <li><Link to="/livingroom/2">Sofa</Link> </li>
+                                                <li><Link to="/livingroom/2">Sofa Sets </Link> </li>
+                                                <li><Link to="/livingroom/2">Recliner<span>New</span></Link> </li>
+                                                <li><Link to="/livingroom/2">Multi functional</Link> </li>
                                             </ul>
                                         </div>
                                         <div className="col-sm-3">
                                             <ul className="multi-column-dropdown">
                                                 <h6>Vehicles</h6>
-                                                <li><Link to="/vehicles/3#home">Bicycle</Link> </li>
-                                                <li><Link to="/vehicles/3#audio">Scooty </Link> </li>
-                                                <li><Link to="/vehicles/3#video">Bike </Link> </li>
-                                                <li><Link to="/vehicles/3#tv">Car</Link> </li>
+                                                <li><Link to="/vehicles/3">Bicycle</Link> </li>
+                                                <li><Link to="/vehicles/3">Scooty </Link> </li>
+                                                <li><Link to="/vehicles/3">Bike </Link> </li>
+                                                <li><Link to="/vehicles/3">Car</Link> </li>
                                             </ul>
                                         </div>
                                         <div className="col-sm-3">
                                             <ul className="multi-column-dropdown">
                                                 <h6>Purifier</h6>
-                                                <li><Link to="purifiers/4#home">Kent</Link> </li>
-                                                <li><Link to="/purifiers/4#audio">Pureit </Link> </li>
-                                                <li><Link to="/purifiers/4#video">Livpure<span>New</span></Link> </li>
-                                                <li><Link to="/purifiers/4#tv">Aquaguard</Link> </li>
-                                                <li><Link to="#">Tata</Link> </li>
+                                                <li><Link to="/purifiers/4">Kent</Link> </li>
+                                                <li><Link to="/purifiers/4">Pureit </Link> </li>
+                                                <li><Link to="/purifiers/4">Livpure<span>New</span></Link> </li>
+                                                <li><Link to="/purifiers/4">Aquaguard</Link> </li>
+                                                <li><Link to="/purifiers/4">Tata</Link> </li>
                                             </ul>
                                         </div>
                                         <div className="col-sm-3">
                                             <ul className="multi-column-dropdown">
                                                 <h6>Air Conditioner</h6>
-                                                <li><Link to="#">Voltas</Link> </li>
-                                                <li><Link to="#">Whirlpool </Link> </li>
-                                                <li><Link to="#">LG <span>New</span></Link> </li>
-                                                <li><Link to="#">Hitachi</Link> </li>
+                                                <li><Link to="/airconditioner/5">Voltas</Link> </li>
+                                                <li><Link to="/airconditioner/5">Whirlpool </Link> </li>
+                                                <li><Link to="/airconditioner/5">LG <span>New</span></Link> </li>
+                                                <li><Link to="/airconditioner/5">Hitachi</Link> </li>
                                                 
                                             </ul>
                                         </div>
@@ -84,10 +84,10 @@ function Menu(){
                                         <div className="col-sm-3">
                                             <ul className="multi-column-dropdown">
                                                 <h6>Kitchen Appliances</h6>
-                                                <li><Link to="#">Microwaves</Link> </li>
-                                                <li><Link to="#">Refrigerator </Link> </li>
-                                                <li><Link to="#">Mixer Juicer Grinder</Link> </li>
-                                                <li><Link to="#">Oven Toaster Grills<span>New</span></Link> </li>
+                                                <li><Link to="/kitchenappliances/6">Microwaves</Link> </li>
+                                                <li><Link to="/kitchenappliances/6">Refrigerator </Link> </li>
+                                                <li><Link to="/kitchenappliances/6">Mixer Juicer Grinder</Link> </li>
+                                                <li><Link to="/kitchenappliances/6">Oven Toaster Grills<span>New</span></Link> </li>
                                                 
                                             </ul>
                                         </div>
@@ -95,11 +95,11 @@ function Menu(){
                                         <div className="col-sm-3">
                                             <ul className="multi-column-dropdown">
                                                 <h6>Washing Machine</h6>
-                                                <li><Link to="#">LG</Link> </li>
-                                                <li><Link to="#">Samsung </Link> </li>
-                                                <li><Link to="#">Whirlpool</Link> </li>
-                                                <li><Link to="#">Bosch</Link> </li> 
-                                                <li><Link to="#">Haier</Link> </li>
+                                                <li><Link to="/washingmachine/7">LG</Link> </li>
+                                                <li><Link to="/washingmachine/7">Samsung </Link> </li>
+                                                <li><Link to="/washingmachine/7">Whirlpool</Link> </li>
+                                                <li><Link to="/washingmachine/7">Bosch</Link> </li> 
+                                                <li><Link to="/washingmachine/7">Haier</Link> </li>
                                                 
                                             </ul>
                                         </div>
@@ -137,6 +137,8 @@ function Menu(){
                                     </div> */}
                                 </ul>
                             </li>
+
+                            {/*
                             <li><Link to="#">About Us</Link> </li>
                             <li className="w3pages"><a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
@@ -144,9 +146,10 @@ function Menu(){
                                     <li><Link to="codes.html">Short Codes</Link></li>
                                 </ul>
                             </li>
+                                */}
 
 
-                            <li><Link to="#">Mail Us</Link></li>
+                            <li><a href="mailto:20352033@pondiuni.ac.in">Mail Us</a></li>
                         </ul>
 
                     </div>

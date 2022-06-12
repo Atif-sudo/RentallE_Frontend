@@ -192,7 +192,7 @@ function Home({isLoggedIn,setIsLoggedIn}){
             <div className="header" id="home1">
                 <div className="container">
                     <div className="w3l_login">
-                      <a href="#" onClick={loginButtonClickHandle} data-toggle="modal" data-target="myModal88"><span className="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                      <a href="javascript:void(0)" onClick={loginButtonClickHandle} data-toggle="modal" data-target="myModal88"><span className="glyphicon glyphicon-user" aria-hidden="true"></span></a>
                     </div>
 
                     <div className="w3l_logo">
@@ -371,8 +371,10 @@ function Home({isLoggedIn,setIsLoggedIn}){
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
                         <div className="modal-header">
-                        <button type="button" class="btn btn-danger" onClick={(e)=>{logOut(e)}}>Log out</button>
                             <button type="button" onClick={()=>document.getElementById('profileModal').style.display='none'} className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <div className="logout-container text-right">
+                                <button type="button" class="btn btn-danger" onClick={(e)=>{logOut(e)}}>Log out</button>
+                            </div>
                             <h4 className="modal-title">
                                 Profile Details
                             </h4>

@@ -41,7 +41,7 @@ function Footer() {
                     <div className="col-md-3 w3_footer_grid">
                         <h3>Profile</h3>
                         <ul className="info">
-                            <li><Link to="index.html">Home</Link></li>
+                            <li><Link to="/">Home</Link></li>
                             <li><Link to="products.html">Today's Deals</Link></li>
                         </ul>
                         <h4>Follow Us</h4>

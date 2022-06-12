@@ -13,7 +13,7 @@
 
 //                 <div className="container">
 //                     <div className="w3l_login">
-//                       <a href="#" onClick={loginButtonClickHandle} data-toggle="modal" data-target="myModal88"><span className="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+//                       <a href="javascript:void(0)" onClick={loginButtonClickHandle} data-toggle="modal" data-target="myModal88"><span className="glyphicon glyphicon-user" aria-hidden="true"></span></a>
 //                     </div>
 
 //                     <div className="w3l_logo">

@@ -212,7 +212,7 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
          {/* <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} /> */}
          <div className="container">
                     <div className="w3l_login">
-                      <a href="#" onClick={loginButtonClickHandle} data-toggle="modal" data-target="myModal88"><span className="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                      <a href="javascript:void(0)" onClick={loginButtonClickHandle} data-toggle="modal" data-target="myModal88"><span className="glyphicon glyphicon-user" aria-hidden="true"></span></a>
                     </div>
 
                     <div className="w3l_logo">
@@ -285,7 +285,7 @@ const Bedroom = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart} ) => {
 
                                          <h5><a href="single.html">{array.productName}</a> </h5>
                                          <div className="simpleCart_shelfItem">
-                                             <p><span>$380</span><i className="item price">{`₹${array.pricePerMonth}`}</i> </p>
+                                             <p><i className="item price">{`₹${array.pricePerMonth}`}</i> </p>
                                              <form action="#" method="post" onSubmit={(e) => {addToCart(e)}} id="cart-item-ad">
                                                  <input type="hidden" name="cmd" value="_cart"/>
                                                  <input type="hidden" name="add" value={array.productId}/>
