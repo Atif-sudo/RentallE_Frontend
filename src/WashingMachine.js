@@ -245,6 +245,36 @@ const WashingMachine = ({isLoggedIn,setIsLoggedIn , cart ,setCart, addToCart}) =
                                 
                             </ul>
                          <div id="myTabContent" className="tab-content">
+                         {
+                                prpList?.map((array,index) => {
+                                     return (
+                                <div role="tabpanel" className="tab-pane fade active in" id={array.subCategoryName} aria-labelledby="home-tab">
+                                 <div className="agile_ecommerce_tabs">
+                                     <div className="col-md-4 agile_ecommerce_tab_left">
+                                         <div className="hs-wrapper">
+                                             <img src={array?.photoUpload ? array.photoUpload : 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'} alt="" className="img-responsive"/>
+
+                                         </div>
+
+                                         <h5><a href="single.html">{array.productName}</a> </h5>
+                                         <div className="simpleCart_shelfItem">
+                                             <p><i className="item price">{`₹${array.pricePerMonth}`}</i> </p>
+                                             <form action="#" method="post" onSubmit={(e) => {addToCart(e)}} id="cart-item-ad">
+                                                 <input type="hidden" name="cmd" value="_cart"/>
+                                                 <input type="hidden" name="add" value={array.productId}/>
+                                                 <input type="hidden" name="w3ls_item" value={array.productName}/>
+                                                 <input type="hidden" name="amount" value={array.pricePerMonth}/>
+                                                 <button type="submit" className="w3ls-cart" >Add to cart</button>
+                                             </form>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                                    )       
+
+                                    })
+                             }
+                            </div>
                             
                              { !isLoggedIn ?
             <div className={"modal  " +sign_in_up_model} id="myModal88" tabIndex="-1">
@@ -384,7 +414,7 @@ const WashingMachine = ({isLoggedIn,setIsLoggedIn , cart ,setCart, addToCart}) =
                 </div>
             </div>
             }
-                         </div>
+                        
                      </div>
                  </div>
 

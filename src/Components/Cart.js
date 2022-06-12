@@ -292,7 +292,7 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
                         cart?.map((array,index) => {
                             
                             return (
-                                <div class="row border-top border-bottom">
+                                <div class="row border-top border-bottom m-4">
                                 <div class="row main align-items-center">
                                  
                                     <div class="col">

@@ -258,13 +258,7 @@ const Purifiers = ({isLoggedIn,setIsLoggedIn,cart ,setCart, addToCart}) => {
                                      <div className="col-md-4 agile_ecommerce_tab_left">
                                          <div className="hs-wrapper">
                                              <img src={array?.photoUpload ? array.photoUpload : 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg'} alt="" className="img-responsive"/>
-                                             <div className="w3_hs_bottom">
-                                                 <ul>
-                                                     <li>
-                                                         <Link to="/singleproduct" data-toggle="modal" data-target="#myModal"><span className="glyphicon glyphicon-eye-open" aria-hidden="true"></span></Link>
-                                                     </li>
-                                                 </ul>
-                                             </div>
+
                                          </div>
 
                                          <h5><a href="single.html">{array.productName}</a> </h5>

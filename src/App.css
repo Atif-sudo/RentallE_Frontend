@@ -50,6 +50,9 @@
   color: #fff;
   background: #3c43a4;
 }
+.border-bottom{
+  border-bottom: 1px solid #eee;
+}
 .row{
   margin: 0;
 }
