@@ -322,7 +322,7 @@ const Cart = ({isLoggedIn,setIsLoggedIn, cart ,setCart, addToCart}) => {
                         {/* <p>SHIPPING</p>
                         <select><option class="text-muted">Standard-Delivery- &#8377; 5.00</option></select>
                         <p>GIVE CODE</p> */}
-                        <input id="code" placeholder="Enter your code" />
+                        <input id="code" placeholder="Enter your PinCode" />
                     
                     <div class="row" >
                         <div class="col">TOTAL PRICE</div>

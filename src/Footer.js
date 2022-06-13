@@ -42,7 +42,7 @@ function Footer() {
                         <h3>Profile</h3>
                         <ul className="info">
                             <li><Link to="/">Home</Link></li>
-                            <li><Link to="products.html">Today's Deals</Link></li>
+                            <li><Link to="#">Today's Deals</Link></li>
                         </ul>
                         <h4>Follow Us</h4>
                         <div className="agileits_social_button">
